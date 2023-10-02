@@ -1,0 +1,53 @@
+definitions:
+  computer.SysInfo:
+    properties:
+      disk:
+        type: integer
+      hostname:
+        type: string
+      platform:
+        type: string
+      ram:
+        type: integer
+      ram available:
+        type: integer
+      ram free:
+        type: integer
+      uptime:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /health/check:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show the status of server.
+      tags:
+      - root
+  /health/info:
+    get:
+      consumes:
+      - '*/*'
+      description: get the info of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/computer.SysInfo'
+      summary: Show the info of server.
+      tags:
+      - root
+swagger: "2.0"

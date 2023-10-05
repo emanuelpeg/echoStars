@@ -25,6 +25,8 @@ func main() {
 	e.GET("/health/info", Info)
 
 	e.GET("/database/health/check", DataBaseHealthCheck)
+	e.GET("/health/info/save", SaveInfo)
+	e.GET("/health/info/getFromDb", GetInfoFromDb)
 
 	//swagger
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
@@ -80,4 +82,41 @@ func DataBaseHealthCheck(c echo.Context) error {
 // @Router /health/info [get]
 func Info(c echo.Context) error {
 	return c.JSON(http.StatusOK, computer.Info())
+}
+
+// SaveInfo godoc
+// @Summary It is a test of the database.
+// @Description It is a test of the database.
+// @Tags root
+// @Accept */*
+// @Produce json
+// @Success 200 {object} computer.SysInfo
+// @Router /health/info/save [get]
+func SaveInfo(c echo.Context) error {
+	info := computer.Info()
+	error := dataBase.SaveInfo(fileName, info)
+	if error == nil {
+		return c.JSON(http.StatusOK, info)
+	}
+	return c.JSON(http.StatusInternalServerError, error)
+}
+
+// GetInfoFromDb godoc
+// @Summary It is a test of the database.
+// @Description It is a test of the database.
+// @Tags root
+// @Accept */*
+// @Produce json
+// @Success 200 {object} computer.SysInfo
+// @Router /health/info/getFromDb [get]
+func GetInfoFromDb(c echo.Context) error {
+	info, error := dataBase.GetInfo(fileName)
+	if error == nil {
+		if info == nil {
+			return c.JSON(http.StatusNotFound, info)
+		} else {
+			return c.JSON(http.StatusOK, info)
+		}
+	}
+	return c.JSON(http.StatusInternalServerError, error)
 }

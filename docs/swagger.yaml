@@ -66,4 +66,34 @@ paths:
       summary: Show the info of server.
       tags:
       - root
+  /health/info/getFromDb:
+    get:
+      consumes:
+      - '*/*'
+      description: It is a test of the database.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/computer.SysInfo'
+      summary: It is a test of the database.
+      tags:
+      - root
+  /health/info/save:
+    get:
+      consumes:
+      - '*/*'
+      description: It is a test of the database.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/computer.SysInfo'
+      summary: It is a test of the database.
+      tags:
+      - root
 swagger: "2.0"

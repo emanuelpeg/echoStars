@@ -85,6 +85,52 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/health/info/getFromDb": {
+            "get": {
+                "description": "It is a test of the database.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "root"
+                ],
+                "summary": "It is a test of the database.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/computer.SysInfo"
+                        }
+                    }
+                }
+            }
+        },
+        "/health/info/save": {
+            "get": {
+                "description": "It is a test of the database.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "root"
+                ],
+                "summary": "It is a test of the database.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/computer.SysInfo"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

@@ -15,6 +15,30 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/database/health/check": {
+            "get": {
+                "description": "get the status of the database.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "root"
+                ],
+                "summary": "Show the status of the database.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
         "/health/check": {
             "get": {
                 "description": "get the status of server.",
@@ -52,6 +76,52 @@ const docTemplate = `{
                     "root"
                 ],
                 "summary": "Show the info of server.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/computer.SysInfo"
+                        }
+                    }
+                }
+            }
+        },
+        "/health/info/getFromDb": {
+            "get": {
+                "description": "It is a test of the database.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "root"
+                ],
+                "summary": "It is a test of the database.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/computer.SysInfo"
+                        }
+                    }
+                }
+            }
+        },
+        "/health/info/save": {
+            "get": {
+                "description": "It is a test of the database.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "root"
+                ],
+                "summary": "It is a test of the database.",
                 "responses": {
                     "200": {
                         "description": "OK",

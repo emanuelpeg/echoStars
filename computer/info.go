@@ -9,10 +9,10 @@ import (
 type SysInfo struct {
 	Hostname     string `json:"hostname"`
 	Platform     string `json:"platform"`
-	Uptime       uint64 `json:"uptime""`
-	RAM          uint64 `json:"ram""`
-	RAMAvailable uint64 `json:"ram available""`
-	RAMFree      uint64 `json:"ram free""`
+	Uptime       uint64 `json:"uptime"`
+	RAM          uint64 `json:"ram"`
+	RAMAvailable uint64 `json:"ram available"`
+	RAMFree      uint64 `json:"ram free"`
 	Disk         uint64 `json:"disk"`
 }
 

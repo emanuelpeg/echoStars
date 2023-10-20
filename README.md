@@ -1,9 +1,12 @@
 # echoStars
 A web services server monitor
 
+## Collaboration
+* [Trello](https://trello.com/c/FogW1SUW)
+* Repo https://github.com/emanuelpeg/echoStars/
 
 ## Prerequisites
-* Clone the repo in: https://github.com/emanuelpeg/echoStars/
+
 * Go installation.
 * Text editor or your preferred IDE.
 
@@ -24,3 +27,4 @@ then, you can run the application (if you are running in Windows, don't forget s
 >go run main.go
 
 EchoStart is a Web application that runs on port _1323_. Please, check logs and then you can open in your preferred browser; here you have the api documentation http://localhost:1323/swagger/index.html uri.
+

@@ -1,7 +1,6 @@
 package computer
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -10,7 +9,7 @@ import (
 func initRoutes(e *echo.Echo) {
 	group := e.Group("/servers")
 	group.GET("", getServers)
-	group.POST("", addServer)
+	group.POST("", createServer)
 }
 
 func getServers(c echo.Context) error {
@@ -23,11 +22,16 @@ func getServers(c echo.Context) error {
 	})
 }
 
-func addServer(c echo.Context) error {
-	servers := TestServers
-	err := AddServer(servers[0])
-	if err != nil {
+func createServer(c echo.Context) error {
+	server := Server{}
+	if err := c.Bind(&server); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, fmt.Sprintf("{\"status\": %d}", http.StatusOK))
+
+	err := CreateServer(server)
+	if err != nil {
+		return c.JSON(http.StatusNotAcceptable, "not accepted")
+	}
+
+	return c.JSON(http.StatusOK, server)
 }

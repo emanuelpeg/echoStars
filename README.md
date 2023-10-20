@@ -1,2 +1,8 @@
-# echoStars
-A web services server monitor
+# EchoStars
+
+A web server monitor
+
+## Local development
+
+- Run `go get`
+- Run `go run main.go`

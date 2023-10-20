@@ -2,18 +2,18 @@ package computer
 
 import "log"
 
-type ServerDao interface {
+type ServerDaoInterface interface {
 	GetAll() ([]Server, error)
 	Create(server *Server) error
 }
 
-func FactoryDao(e string) ServerDao {
-	var i ServerDao
-	switch e {
+func FactoryDao(dbEngine string) ServerDaoInterface {
+	var i ServerDaoInterface
+	switch dbEngine {
 	case "boltdb":
-		i = ServerImplBoltDb{}
+		i = ServerDaoBoltDb{}
 	default:
-		log.Fatalf("Engine %s not implemented", e)
+		log.Fatalf("Engine %s not implemented", dbEngine)
 		return nil
 	}
 

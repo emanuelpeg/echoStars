@@ -7,16 +7,16 @@ import (
 	bolt "go.etcd.io/bbolt"
 )
 
-type ServerImplBoltDb struct {
+type ServerDaoBoltDb struct {
 }
 
 // GetAll implements ServerDao.
-func (ServerImplBoltDb) GetAll() ([]Server, error) {
+func (ServerDaoBoltDb) GetAll() ([]Server, error) {
 	panic("unimplemented")
 }
 
 // Create implements ServerDao.
-func (ServerImplBoltDb) Create(server *Server) error {
+func (ServerDaoBoltDb) Create(server *Server) error {
 	db, err := bolt.Open("data.db", 0600, nil)
 	if err != nil {
 		log.Info(err)
@@ -43,7 +43,7 @@ func (ServerImplBoltDb) Create(server *Server) error {
 		return err
 	}
 
-	err = bucket.Put([]byte("hostname3"), buf)
+	err = bucket.Put([]byte(server.Hostname), buf)
 	if err != nil {
 		log.Info(err)
 		return err

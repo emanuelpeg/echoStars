@@ -26,6 +26,14 @@ func Init(e *echo.Echo) {
 	initRoutes(e)
 }
 
+// GetServers godoc
+// @Summary Lists registered servers.
+// @Description List all registered servers.
+// @Tags server
+// @Accept */*
+// @Produce json
+// @Success 200 {object} []computer.server
+// @Router /servers [get]
 func GetServers() ([]Server, error) {
 	serverDao := FactoryDao("boltdb")
 	servers, err := serverDao.GetAll()
@@ -36,12 +44,23 @@ func GetServers() ([]Server, error) {
 	return servers, nil
 }
 
-func AddServer(server Server) error {
+// CreateServer godoc
+// @Summary Creates a new server.
+// @Description Creates new server for monitoring using a server struct as input.
+// @Tags server
+// @Accept json
+// @Produce json
+// @Success 200 {object} computer.server
+// @Router /servers [post]
+func CreateServer(server Server) error {
 	serverDao := FactoryDao("boltdb")
-	err := serverDao.Create(&server)
-	if err != nil {
-		log.Fatal(err)
-		return err
+	if serverDao != nil {
+		err := serverDao.Create(&server)
+		if err != nil {
+			log.Fatal(err)
+			return err
+		}
 	}
+
 	return nil
 }

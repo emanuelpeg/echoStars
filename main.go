@@ -4,10 +4,11 @@ import (
 	"echoStars/computer"
 	"echoStars/dataBase"
 	_ "echoStars/docs"
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
-	"net/http"
 )
 
 const fileName = "data.db"
@@ -27,6 +28,8 @@ func main() {
 	e.GET("/database/health/check", DataBaseHealthCheck)
 	e.GET("/health/info/save", SaveInfo)
 	e.GET("/health/info/getFromDb", GetInfoFromDb)
+
+	computer.Init(e)
 
 	//swagger
 	e.GET("/swagger/*", echoSwagger.WrapHandler)

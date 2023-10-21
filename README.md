@@ -27,4 +27,3 @@ then, you can run the application (if you are running in Windows, don't forget s
 >go run main.go
 
 EchoStart is a Web application that runs on port _1323_. Please, check logs and then you can open in your preferred browser; here you have the api documentation http://localhost:1323/swagger/index.html uri.
-

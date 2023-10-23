@@ -1,6 +1,9 @@
 # echoStars
 A web services server monitor
 
+# greetings 
+In the folder greetings there are examples of a unit test 
+
 ## Collaboration
 * [Trello](https://trello.com/c/FogW1SUW)
 * Repo https://github.com/emanuelpeg/echoStars/

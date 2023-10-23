@@ -17,9 +17,7 @@ func getServers(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"servers": servers,
-	})
+	return c.JSON(http.StatusOK, servers)
 }
 
 func createServer(c echo.Context) error {

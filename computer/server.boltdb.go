@@ -12,7 +12,34 @@ type ServerDaoBoltDb struct {
 
 // GetAll implements ServerDao.
 func (ServerDaoBoltDb) GetAll() ([]Server, error) {
-	panic("unimplemented")
+	db, err := bolt.Open("data.db", 0600, nil)
+	if err != nil {
+		log.Info(err)
+		return nil, err
+	}
+	defer db.Close()
+
+	servers := []Server{}
+	err = db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("servers"))
+		b.ForEach(func(_, value []byte) error {
+			var server Server
+			err := json.Unmarshal(value, &server)
+			if err != nil {
+				log.Error(err)
+			}
+			servers = append(servers, server)
+			return nil
+		})
+		return nil
+	})
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	return servers, nil
 }
 
 // Create implements ServerDao.

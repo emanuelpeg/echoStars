@@ -2,8 +2,15 @@ package greetings
 
 import "fmt"
 
+type Greeter interface {
+	Hello(name string) (message string)
+}
+
+type GreeterImp struct {
+}
+
 // Hello returns a greeting for the named person.
-func Hello(name string) (message string) {
+func (g GreeterImp) Hello(name string) (message string) {
 	// Return a greeting that embeds the name in a message.
 	if name == "" {
 		message = "Hi!"

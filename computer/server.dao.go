@@ -5,6 +5,7 @@ import "log"
 type ServerDaoInterface interface {
 	GetAll() ([]Server, error)
 	Create(server *Server) error
+	Delete(server *Server) error
 }
 
 func FactoryDao(dbEngine string) ServerDaoInterface {

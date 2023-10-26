@@ -64,3 +64,24 @@ func CreateServer(server Server) error {
 
 	return nil
 }
+
+// DeleteServer godoc
+// @Summary delete a server.
+// @Description delete  server from server id.
+// @Tags server
+// @Accept json
+// @Produce json
+// @Success 204 {object} computer.server
+// @Router /servers [post]
+func DeleteServer(server Server) error {
+	serverDao := FactoryDao("boltdb")
+	if serverDao != nil {
+		err := serverDao.Delete(&server)
+		if err != nil {
+			log.Fatal(err)
+			return err
+		}
+	}
+
+	return nil
+}

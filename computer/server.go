@@ -73,10 +73,10 @@ func CreateServer(server Server) error {
 // @Produce json
 // @Success 204 {object} computer.server
 // @Router /servers [post]
-func DeleteServer(server Server) error {
+func DeleteServer(hostname *string) error {
 	serverDao := FactoryDao("boltdb")
 	if serverDao != nil {
-		err := serverDao.Delete(&server)
+		err := serverDao.Delete(hostname)
 		if err != nil {
 			log.Fatal(err)
 			return err

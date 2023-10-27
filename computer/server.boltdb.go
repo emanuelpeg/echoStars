@@ -91,7 +91,7 @@ func (ServerDaoBoltDb) Create(server *Server) error {
 	return nil
 }
 
-func (ServerDaoBoltDb) Delete(server *Server) error {
+func (ServerDaoBoltDb) Delete(hostname *string) error {
 	db, err := bolt.Open("data.db", 0600, nil)
 	if err != nil {
 		log.Info(err)
@@ -117,7 +117,7 @@ func (ServerDaoBoltDb) Delete(server *Server) error {
 		log.Info(err)
 		return err
 	}
-	err = bucket.Delete([]byte(server.Hostname))
+	err = bucket.Delete([]byte(*hostname))
 	if err != nil {
 		log.Info(err)
 		return err

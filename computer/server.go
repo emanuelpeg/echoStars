@@ -71,7 +71,7 @@ func CreateServer(server Server) error {
 // @Tags server
 // @Accept json
 // @Produce json
-// @Success 204 {object} computer.server
+// @Success 200 {string} hostname
 // @Router /servers [post]
 func DeleteServer(hostname *string) error {
 	serverDao := FactoryDao("boltdb")

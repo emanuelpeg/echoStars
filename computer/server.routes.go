@@ -38,17 +38,14 @@ func createServer(c echo.Context) error {
 func deleteServer(c echo.Context) error {
 	hostname := c.Param("hostname")
 
-	// Tu lógica para busc
-
-	// TODO Aquí debo utilizar el id para eliminar al usuario y no un server
-	// ...
+	// TODO add find by 'id' in order to check if the server exists before delete.
 	server := Server{}
 	if err := c.Bind(&server); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 	err := DeleteServer(&hostname)
 	if err != nil {
-		return c.JSON(http.StatusNotAcceptable, "not accepted")
+		return c.JSON(http.StatusInternalServerError, "Internal server error")
 	}
 	return c.JSON(http.StatusOK, map[string]string{
 		"message": "Deleted server",

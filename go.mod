@@ -9,6 +9,7 @@ require (
 	github.com/swaggo/echo-swagger v1.4.1
 	github.com/swaggo/swag v1.16.2
 	go.etcd.io/bbolt v1.3.7
+	go.uber.org/mock v0.3.0
 )
 
 require (

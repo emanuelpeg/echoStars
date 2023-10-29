@@ -120,9 +120,113 @@
                     }
                 }
             }
+        },
+        "/notification/email": {
+            "post": {
+                "description": "Send an email notification using the EmailNotification factory. Expects JSON data in the request body.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "email"
+                ],
+                "summary": "Send an email notification.",
+                "parameters": [
+                    {
+                        "description": "Email request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/notification.SendEmailRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/notification.SendEmailResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/servers": {
+            "get": {
+                "description": "List all registered servers.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "server"
+                ],
+                "summary": "Lists registered servers.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/computer.Server"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates new server for monitoring using a server struct as input.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "server"
+                ],
+                "summary": "Creates a new server.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/computer.Server"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "computer.Server": {
+            "type": "object",
+            "properties": {
+                "frequency": {
+                    "type": "integer"
+                },
+                "hostname": {
+                    "type": "string"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "mailTo": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "boolean"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
         "computer.SysInfo": {
             "type": "object",
             "properties": {
@@ -146,6 +250,28 @@
                 },
                 "uptime": {
                     "type": "integer"
+                }
+            }
+        },
+        "notification.SendEmailRequest": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "recipient": {
+                    "type": "string"
+                },
+                "subject": {
+                    "type": "string"
+                }
+            }
+        },
+        "notification.SendEmailResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
                 }
             }
         }

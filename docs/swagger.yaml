@@ -1,4 +1,19 @@
 definitions:
+  computer.Server:
+    properties:
+      frequency:
+        type: integer
+      hostname:
+        type: string
+      ip:
+        type: string
+      mailTo:
+        type: string
+      status:
+        type: boolean
+      url:
+        type: string
+    type: object
   computer.SysInfo:
     properties:
       disk:
@@ -15,6 +30,20 @@ definitions:
         type: integer
       uptime:
         type: integer
+    type: object
+  notification.SendEmailRequest:
+    properties:
+      body:
+        type: string
+      recipient:
+        type: string
+      subject:
+        type: string
+    type: object
+  notification.SendEmailResponse:
+    properties:
+      message:
+        type: string
     type: object
 info:
   contact: {}
@@ -96,4 +125,58 @@ paths:
       summary: It is a test of the database.
       tags:
       - root
+  /notification/email:
+    post:
+      consumes:
+      - application/json
+      description: Send an email notification using the EmailNotification factory.
+        Expects JSON data in the request body.
+      parameters:
+      - description: Email request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/notification.SendEmailRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/notification.SendEmailResponse'
+      summary: Send an email notification.
+      tags:
+      - email
+  /servers:
+    get:
+      consumes:
+      - '*/*'
+      description: List all registered servers.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/computer.Server'
+            type: array
+      summary: Lists registered servers.
+      tags:
+      - server
+    post:
+      consumes:
+      - application/json
+      description: Creates new server for monitoring using a server struct as input.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/computer.Server'
+      summary: Creates a new server.
+      tags:
+      - server
 swagger: "2.0"

@@ -4,6 +4,7 @@ import (
 	"echoStars/computer"
 	"echoStars/dataBase"
 	_ "echoStars/docs"
+	"echoStars/notification"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -30,6 +31,8 @@ func main() {
 	e.GET("/health/info/getFromDb", GetInfoFromDb)
 
 	computer.Init(e)
+
+	notification.RegisterNotificationRoutes(e)
 
 	//swagger
 	e.GET("/swagger/*", echoSwagger.WrapHandler)

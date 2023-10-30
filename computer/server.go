@@ -32,7 +32,7 @@ func Init(e *echo.Echo) {
 // @Tags server
 // @Accept */*
 // @Produce json
-// @Success 200 {object} []computer.server
+// @Success 200 {object} []computer.Server
 // @Router /servers [get]
 func GetServers() ([]Server, error) {
 	serverDao := FactoryDao("boltdb")
@@ -50,7 +50,7 @@ func GetServers() ([]Server, error) {
 // @Tags server
 // @Accept json
 // @Produce json
-// @Success 200 {object} computer.server
+// @Success 200 {object} computer.Server
 // @Router /servers [post]
 func CreateServer(server Server) error {
 	serverDao := FactoryDao("boltdb")

@@ -1,4 +1,4 @@
-package computer
+package sysinfo
 
 import (
 	"github.com/shirou/gopsutil/disk"

@@ -14,7 +14,21 @@ definitions:
       url:
         type: string
     type: object
-  computer.SysInfo:
+  notification.SendEmailRequest:
+    properties:
+      body:
+        type: string
+      recipient:
+        type: string
+      subject:
+        type: string
+    type: object
+  notification.SendEmailResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  sysinfo.SysInfo:
     properties:
       disk:
         type: integer
@@ -31,39 +45,9 @@ definitions:
       uptime:
         type: integer
     type: object
-  notification.SendEmailRequest:
-    properties:
-      body:
-        type: string
-      recipient:
-        type: string
-      subject:
-        type: string
-    type: object
-  notification.SendEmailResponse:
-    properties:
-      message:
-        type: string
-    type: object
 info:
   contact: {}
 paths:
-  /database/health/check:
-    get:
-      consumes:
-      - '*/*'
-      description: get the status of the database.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Show the status of the database.
-      tags:
-      - root
   /health/check:
     get:
       consumes:
@@ -91,11 +75,27 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/computer.SysInfo'
+            $ref: '#/definitions/sysinfo.SysInfo'
       summary: Show the info of server.
       tags:
       - root
-  /health/info/getFromDb:
+  /info/database/check:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of the database.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show the status of the database.
+      tags:
+      - root
+  /info/getFromDb:
     get:
       consumes:
       - '*/*'
@@ -106,11 +106,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/computer.SysInfo'
+            $ref: '#/definitions/sysinfo.SysInfo'
       summary: It is a test of the database.
       tags:
       - root
-  /health/info/save:
+  /info/save:
     get:
       consumes:
       - '*/*'
@@ -121,7 +121,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/computer.SysInfo'
+            $ref: '#/definitions/sysinfo.SysInfo'
       summary: It is a test of the database.
       tags:
       - root
@@ -168,15 +168,15 @@ paths:
     post:
       consumes:
       - application/json
-      description: Creates new server for monitoring using a server struct as input.
+      description: delete  server from server id.
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/computer.Server'
-      summary: Creates a new server.
+            type: string
+      summary: delete a server.
       tags:
       - server
 swagger: "2.0"

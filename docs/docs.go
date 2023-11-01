@@ -15,30 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/database/health/check": {
-            "get": {
-                "description": "get the status of the database.",
-                "consumes": [
-                    "*/*"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "root"
-                ],
-                "summary": "Show the status of the database.",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
-        },
         "/health/check": {
             "get": {
                 "description": "get the status of server.",
@@ -80,13 +56,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/computer.SysInfo"
+                            "$ref": "#/definitions/sysinfo.SysInfo"
                         }
                     }
                 }
             }
         },
-        "/health/info/getFromDb": {
+        "/info/database/check": {
+            "get": {
+                "description": "get the status of the database.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "root"
+                ],
+                "summary": "Show the status of the database.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/info/getFromDb": {
             "get": {
                 "description": "It is a test of the database.",
                 "consumes": [
@@ -103,13 +103,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/computer.SysInfo"
+                            "$ref": "#/definitions/sysinfo.SysInfo"
                         }
                     }
                 }
             }
         },
-        "/health/info/save": {
+        "/info/save": {
             "get": {
                 "description": "It is a test of the database.",
                 "consumes": [
@@ -126,7 +126,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/computer.SysInfo"
+                            "$ref": "#/definitions/sysinfo.SysInfo"
                         }
                     }
                 }
@@ -192,7 +192,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Creates new server for monitoring using a server struct as input.",
+                "description": "delete  server from server id.",
                 "consumes": [
                     "application/json"
                 ],
@@ -202,12 +202,12 @@ const docTemplate = `{
                 "tags": [
                     "server"
                 ],
-                "summary": "Creates a new server.",
+                "summary": "delete a server.",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/computer.Server"
+                            "type": "string"
                         }
                     }
                 }
@@ -238,7 +238,29 @@ const docTemplate = `{
                 }
             }
         },
-        "computer.SysInfo": {
+        "notification.SendEmailRequest": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "recipient": {
+                    "type": "string"
+                },
+                "subject": {
+                    "type": "string"
+                }
+            }
+        },
+        "notification.SendEmailResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "sysinfo.SysInfo": {
             "type": "object",
             "properties": {
                 "disk": {
@@ -261,28 +283,6 @@ const docTemplate = `{
                 },
                 "uptime": {
                     "type": "integer"
-                }
-            }
-        },
-        "notification.SendEmailRequest": {
-            "type": "object",
-            "properties": {
-                "body": {
-                    "type": "string"
-                },
-                "recipient": {
-                    "type": "string"
-                },
-                "subject": {
-                    "type": "string"
-                }
-            }
-        },
-        "notification.SendEmailResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
                 }
             }
         }

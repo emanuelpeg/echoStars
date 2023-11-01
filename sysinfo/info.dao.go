@@ -1,14 +1,27 @@
-package dataBase
+package sysinfo
 
 import (
-	"echoStars/computer"
+	"echoStars/database"
 	"encoding/json"
 	"github.com/labstack/gommon/log"
 	bolt "go.etcd.io/bbolt"
 )
 
-func CheckDb(fileName string) (bool, error) {
-	db, err := bolt.Open(fileName, 0600, nil)
+type InfoDao interface {
+	CheckDb() (bool, error)
+	SaveInfo(info *SysInfo) error
+	GetInfo() (*SysInfo, error)
+}
+
+type InfoDaoBolt struct {
+}
+
+func NewInfoDao() InfoDao {
+	return InfoDaoBolt{}
+}
+
+func (dao InfoDaoBolt) CheckDb() (bool, error) {
+	db, err := bolt.Open(database.FileName, 0600, nil)
 	if err != nil {
 		log.Info(err)
 		return false, err
@@ -18,8 +31,8 @@ func CheckDb(fileName string) (bool, error) {
 	return true, nil
 }
 
-func SaveInfo(fileName string, info *computer.SysInfo) error {
-	db, err := bolt.Open(fileName, 0600, nil)
+func (dao InfoDaoBolt) SaveInfo(info *SysInfo) error {
+	db, err := bolt.Open(database.FileName, 0600, nil)
 	if err != nil {
 		log.Info(err)
 		return err
@@ -59,8 +72,8 @@ func SaveInfo(fileName string, info *computer.SysInfo) error {
 	return nil
 }
 
-func GetInfo(fileName string) (*computer.SysInfo, error) {
-	db, err := bolt.Open(fileName, 0600, nil)
+func (dao InfoDaoBolt) GetInfo() (*SysInfo, error) {
+	db, err := bolt.Open(database.FileName, 0600, nil)
 	if err != nil {
 		log.Info(err)
 		return nil, err
@@ -81,7 +94,7 @@ func GetInfo(fileName string) (*computer.SysInfo, error) {
 		return nil, nil
 	}
 
-	var info computer.SysInfo
+	var info SysInfo
 
 	err = json.Unmarshal(buf, &info)
 	if err != nil {

@@ -32,7 +32,12 @@ EchoStart is a Web application that runs on port _1323_. Please, check logs and 
 # Write test with Mocks
 
 ## Greetings
+
 In the folder greetings there are examples of a unit test
+
+## Routines
+
+Run `cd routines` and `go run .` to run the routines test code
 
 ## GoMock
 

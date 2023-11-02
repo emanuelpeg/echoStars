@@ -4,7 +4,6 @@ import (
 	"echoStars/database"
 	"encoding/json"
 	"github.com/labstack/gommon/log"
-	bolt "go.etcd.io/bbolt"
 )
 
 type InfoDao interface {
@@ -21,7 +20,13 @@ func NewInfoDao() InfoDao {
 }
 
 func (dao InfoDaoBolt) CheckDb() (bool, error) {
-	db, err := bolt.Open(database.FileName, 0600, nil)
+	boltDB, err := database.NewBoltDB()
+	if err != nil {
+		log.Info(err)
+		return false, err
+	}
+
+	db, err := boltDB.Open()
 	if err != nil {
 		log.Info(err)
 		return false, err
@@ -32,7 +37,13 @@ func (dao InfoDaoBolt) CheckDb() (bool, error) {
 }
 
 func (dao InfoDaoBolt) SaveInfo(info *SysInfo) error {
-	db, err := bolt.Open(database.FileName, 0600, nil)
+	boltDB, err := database.NewBoltDB()
+	if err != nil {
+		log.Info(err)
+		return err
+	}
+
+	db, err := boltDB.Open()
 	if err != nil {
 		log.Info(err)
 		return err
@@ -73,7 +84,13 @@ func (dao InfoDaoBolt) SaveInfo(info *SysInfo) error {
 }
 
 func (dao InfoDaoBolt) GetInfo() (*SysInfo, error) {
-	db, err := bolt.Open(database.FileName, 0600, nil)
+	boltDB, err := database.NewBoltDB()
+	if err != nil {
+		log.Info(err)
+		return nil, err
+	}
+
+	db, err := boltDB.Open()
 	if err != nil {
 		log.Info(err)
 		return nil, err

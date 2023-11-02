@@ -1,6 +1,7 @@
 package server
 
 import (
+	"echoStars/database"
 	"encoding/json"
 	"fmt"
 	"github.com/labstack/gommon/log"
@@ -20,7 +21,7 @@ func NewServerDao() ServerDaoInterface {
 	return ServerDaoBolt{}
 }
 func (s ServerDaoBolt) GetAll() ([]*Server, error) {
-	db, err := bolt.Open("data.db", 0600, nil)
+	db, err := bolt.Open(database.FileName, 0600, nil)
 	if err != nil {
 		log.Info(err)
 		return nil, err
@@ -29,7 +30,7 @@ func (s ServerDaoBolt) GetAll() ([]*Server, error) {
 
 	servers := make([]*Server, 0)
 	err = db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("servers"))
+		b := tx.Bucket([]byte(database.ServersTable))
 		if b == nil {
 			return fmt.Errorf("bucket servers was not found, becasue 'storage' was not found")
 		}
@@ -58,7 +59,7 @@ func (s ServerDaoBolt) GetAll() ([]*Server, error) {
 }
 
 func (s ServerDaoBolt) Create(server *Server) (*Server, error) {
-	db, err := bolt.Open("data.db", 0600, nil)
+	db, err := bolt.Open(database.FileName, 0600, nil)
 	if err != nil {
 		log.Info(err)
 		return nil, err
@@ -72,7 +73,7 @@ func (s ServerDaoBolt) Create(server *Server) (*Server, error) {
 	}
 	defer tx.Rollback()
 
-	bucket, err := tx.CreateBucketIfNotExists([]byte("servers"))
+	bucket, err := tx.CreateBucketIfNotExists([]byte(database.ServersTable))
 	if err != nil {
 		log.Info(err)
 		return nil, err
@@ -99,7 +100,7 @@ func (s ServerDaoBolt) Create(server *Server) (*Server, error) {
 }
 
 func (s ServerDaoBolt) Delete(hostname *string) (bool, error) {
-	db, err := bolt.Open("data.db", 0600, nil)
+	db, err := bolt.Open(database.FileName, 0600, nil)
 	if err != nil {
 		log.Info(err)
 		return false, err
@@ -113,7 +114,7 @@ func (s ServerDaoBolt) Delete(hostname *string) (bool, error) {
 	}
 	defer tx.Rollback()
 
-	bucket, err := tx.CreateBucketIfNotExists([]byte("servers"))
+	bucket, err := tx.CreateBucketIfNotExists([]byte(database.ServersTable))
 	if err != nil {
 		log.Info(err)
 		return false, err

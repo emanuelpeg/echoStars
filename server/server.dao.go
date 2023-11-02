@@ -8,6 +8,8 @@ import (
 	bolt "go.etcd.io/bbolt"
 )
 
+const ServersTable = "servers"
+
 type ServerDaoInterface interface {
 	GetAll() ([]*Server, error)
 	Create(server *Server) (*Server, error)
@@ -21,7 +23,12 @@ func NewServerDao() ServerDaoInterface {
 	return ServerDaoBolt{}
 }
 func (s ServerDaoBolt) GetAll() ([]*Server, error) {
-	db, err := bolt.Open(database.FileName, 0600, nil)
+	boltDB, err := database.NewBoltDB()
+	if err != nil {
+		log.Info(err)
+		return nil, err
+	}
+	db, err := boltDB.Open()
 	if err != nil {
 		log.Info(err)
 		return nil, err
@@ -30,7 +37,7 @@ func (s ServerDaoBolt) GetAll() ([]*Server, error) {
 
 	servers := make([]*Server, 0)
 	err = db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(database.ServersTable))
+		b := tx.Bucket([]byte(ServersTable))
 		if b == nil {
 			return fmt.Errorf("bucket servers was not found, becasue 'storage' was not found")
 		}
@@ -59,11 +66,12 @@ func (s ServerDaoBolt) GetAll() ([]*Server, error) {
 }
 
 func (s ServerDaoBolt) Create(server *Server) (*Server, error) {
-	db, err := bolt.Open(database.FileName, 0600, nil)
+	boltDB, err := database.NewBoltDB()
 	if err != nil {
 		log.Info(err)
 		return nil, err
 	}
+	db, err := boltDB.Open()
 	defer db.Close()
 
 	tx, err := db.Begin(true)
@@ -73,7 +81,7 @@ func (s ServerDaoBolt) Create(server *Server) (*Server, error) {
 	}
 	defer tx.Rollback()
 
-	bucket, err := tx.CreateBucketIfNotExists([]byte(database.ServersTable))
+	bucket, err := tx.CreateBucketIfNotExists([]byte(ServersTable))
 	if err != nil {
 		log.Info(err)
 		return nil, err
@@ -100,11 +108,12 @@ func (s ServerDaoBolt) Create(server *Server) (*Server, error) {
 }
 
 func (s ServerDaoBolt) Delete(hostname *string) (bool, error) {
-	db, err := bolt.Open(database.FileName, 0600, nil)
+	boltDB, err := database.NewBoltDB()
 	if err != nil {
 		log.Info(err)
 		return false, err
 	}
+	db, err := boltDB.Open()
 	defer db.Close()
 	// TODO add find by 'id' in order to check if the server exists before delete.
 	tx, err := db.Begin(true)
@@ -114,7 +123,7 @@ func (s ServerDaoBolt) Delete(hostname *string) (bool, error) {
 	}
 	defer tx.Rollback()
 
-	bucket, err := tx.CreateBucketIfNotExists([]byte(database.ServersTable))
+	bucket, err := tx.CreateBucketIfNotExists([]byte(ServersTable))
 	if err != nil {
 		log.Info(err)
 		return false, err

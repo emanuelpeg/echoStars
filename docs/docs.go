@@ -185,13 +185,34 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/computer.Server"
+                                "$ref": "#/definitions/server.Server"
                             }
                         }
                     }
                 }
             },
             "post": {
+                "description": "Creates new server for monitoring using a server struct as input.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "server"
+                ],
+                "summary": "Creates a new server.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.Server"
+                        }
+                    }
+                }
+            },
+            "delete": {
                 "description": "delete  server from server id.",
                 "consumes": [
                     "application/json"
@@ -215,29 +236,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "computer.Server": {
-            "type": "object",
-            "properties": {
-                "frequency": {
-                    "type": "integer"
-                },
-                "hostname": {
-                    "type": "string"
-                },
-                "ip": {
-                    "type": "string"
-                },
-                "mailTo": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "boolean"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
         "notification.SendEmailRequest": {
             "type": "object",
             "properties": {
@@ -256,6 +254,29 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "server.Server": {
+            "type": "object",
+            "properties": {
+                "frequency": {
+                    "type": "integer"
+                },
+                "hostname": {
+                    "type": "string"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "mailTo": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "boolean"
+                },
+                "url": {
                     "type": "string"
                 }
             }

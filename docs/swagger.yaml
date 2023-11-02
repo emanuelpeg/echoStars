@@ -1,19 +1,4 @@
 definitions:
-  computer.Server:
-    properties:
-      frequency:
-        type: integer
-      hostname:
-        type: string
-      ip:
-        type: string
-      mailTo:
-        type: string
-      status:
-        type: boolean
-      url:
-        type: string
-    type: object
   notification.SendEmailRequest:
     properties:
       body:
@@ -26,6 +11,21 @@ definitions:
   notification.SendEmailResponse:
     properties:
       message:
+        type: string
+    type: object
+  server.Server:
+    properties:
+      frequency:
+        type: integer
+      hostname:
+        type: string
+      ip:
+        type: string
+      mailTo:
+        type: string
+      status:
+        type: boolean
+      url:
         type: string
     type: object
   sysinfo.SysInfo:
@@ -149,23 +149,7 @@ paths:
       tags:
       - email
   /servers:
-    get:
-      consumes:
-      - '*/*'
-      description: List all registered servers.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/computer.Server'
-            type: array
-      summary: Lists registered servers.
-      tags:
-      - server
-    post:
+    delete:
       consumes:
       - application/json
       description: delete  server from server id.
@@ -177,6 +161,36 @@ paths:
           schema:
             type: string
       summary: delete a server.
+      tags:
+      - server
+    get:
+      consumes:
+      - '*/*'
+      description: List all registered servers.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/server.Server'
+            type: array
+      summary: Lists registered servers.
+      tags:
+      - server
+    post:
+      consumes:
+      - application/json
+      description: Creates new server for monitoring using a server struct as input.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.Server'
+      summary: Creates a new server.
       tags:
       - server
 swagger: "2.0"

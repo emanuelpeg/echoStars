@@ -1,9 +1,9 @@
 package main
 
 import (
-	"echoStars/computer"
 	_ "echoStars/docs"
 	"echoStars/notification"
+	"echoStars/server"
 	"echoStars/sysinfo"
 	"net/http"
 
@@ -25,7 +25,7 @@ func main() {
 	e.GET("/health/info", Info)
 
 	sysinfo.Init(e)
-	computer.Init(e)
+	server.Init(e)
 
 	notification.RegisterNotificationRoutes(e)
 

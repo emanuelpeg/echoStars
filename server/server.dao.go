@@ -1,33 +1,49 @@
-package computer
+package server
 
 import (
+	"echoStars/database"
 	"encoding/json"
 	"fmt"
 	"github.com/labstack/gommon/log"
 	bolt "go.etcd.io/bbolt"
 )
 
-type ServerDaoBoltDb struct {
+const ServersTable = "servers"
+
+type ServerDaoInterface interface {
+	GetAll() ([]*Server, error)
+	Create(server *Server) (*Server, error)
+	Delete(hostname *string) (bool, error)
 }
 
-// GetAll implements ServerDao.
-func (ServerDaoBoltDb) GetAll() ([]Server, error) {
-	db, err := bolt.Open("data.db", 0600, nil)
+type ServerDaoBolt struct {
+}
+
+func NewServerDao() ServerDaoInterface {
+	return ServerDaoBolt{}
+}
+func (s ServerDaoBolt) GetAll() ([]*Server, error) {
+	boltDB, err := database.NewBoltDB()
+	if err != nil {
+		log.Info(err)
+		return nil, err
+	}
+	db, err := boltDB.Open()
 	if err != nil {
 		log.Info(err)
 		return nil, err
 	}
 	defer db.Close()
 
-	servers := make([]Server, 0)
+	servers := make([]*Server, 0)
 	err = db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("servers"))
+		b := tx.Bucket([]byte(ServersTable))
 		if b == nil {
 			return fmt.Errorf("bucket servers was not found, becasue 'storage' was not found")
 		}
 
 		err := b.ForEach(func(_, value []byte) error {
-			var server Server
+			var server *Server
 			err := json.Unmarshal(value, &server)
 			if err != nil {
 				log.Error(err)
@@ -49,84 +65,85 @@ func (ServerDaoBoltDb) GetAll() ([]Server, error) {
 	return servers, nil
 }
 
-// Create implements ServerDao.
-func (ServerDaoBoltDb) Create(server *Server) error {
-	db, err := bolt.Open("data.db", 0600, nil)
+func (s ServerDaoBolt) Create(server *Server) (*Server, error) {
+	boltDB, err := database.NewBoltDB()
 	if err != nil {
 		log.Info(err)
-		return err
+		return nil, err
 	}
+	db, err := boltDB.Open()
 	defer db.Close()
 
 	tx, err := db.Begin(true)
 	if err != nil {
 		log.Info(err)
-		return err
+		return nil, err
 	}
 	defer tx.Rollback()
 
-	bucket, err := tx.CreateBucketIfNotExists([]byte("servers"))
+	bucket, err := tx.CreateBucketIfNotExists([]byte(ServersTable))
 	if err != nil {
 		log.Info(err)
-		return err
+		return nil, err
 	}
 
 	buf, err := json.Marshal(*server)
 	if err != nil {
 		log.Info(err)
-		return err
+		return nil, err
 	}
 
 	err = bucket.Put([]byte(server.Hostname), buf)
 	if err != nil {
 		log.Info(err)
-		return err
+		return nil, err
 	}
 
 	if err := tx.Commit(); err != nil {
 		log.Info(err)
-		return err
+		return nil, err
 	}
-
-	return nil
+	// TODO should return the just created object
+	return server, nil
 }
 
-func (ServerDaoBoltDb) Delete(hostname *string) error {
-	db, err := bolt.Open("data.db", 0600, nil)
+func (s ServerDaoBolt) Delete(hostname *string) (bool, error) {
+	boltDB, err := database.NewBoltDB()
 	if err != nil {
 		log.Info(err)
-		return err
+		return false, err
 	}
+	db, err := boltDB.Open()
 	defer db.Close()
-
+	// TODO add find by 'id' in order to check if the server exists before delete.
 	tx, err := db.Begin(true)
 	if err != nil {
 		log.Info(err)
-		return err
+		return false, err
 	}
 	defer tx.Rollback()
 
-	bucket, err := tx.CreateBucketIfNotExists([]byte("servers"))
+	bucket, err := tx.CreateBucketIfNotExists([]byte(ServersTable))
 	if err != nil {
 		log.Info(err)
-		return err
+		return false, err
 	}
 
 	//buf, err := json.Marshal(*server)
 	if err != nil {
 		log.Info(err)
-		return err
+		return false, err
 	}
 	err = bucket.Delete([]byte(*hostname))
 	if err != nil {
 		log.Info(err)
-		return err
+		return false, err
 	}
 
 	if err := tx.Commit(); err != nil {
 		log.Info(err)
-		return err
+		return false, err
 	}
 
-	return nil
+	return true, nil
 }

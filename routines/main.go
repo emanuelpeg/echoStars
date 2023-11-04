@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"echoStars/routines/concurrencyType"
+	"errors"
 	"fmt"
 	"net/http"
 	"sync"
@@ -92,16 +94,22 @@ func concurrentGetChn() []error {
 	}
 	count := 0
 	var errList []error
+	ctx, cancelCtx := context.WithDeadline(context.TODO(), time.Now().Add(3000*time.Millisecond))
+	defer cancelCtx()
 	for {
-		count++
+		if count == len(urls) {
+			return errList
+		}
 		select {
 		case err := <-errChan:
 			errList = append(errList, err)
 		case statusCode := <-done:
 			fmt.Println("Status code: ", statusCode)
-			if count == len(urls) {
-				return errList
-			}
+		case <-ctx.Done():
+			fmt.Println("Timed out")
+			errList = append(errList, errors.New("timed out"))
 		}
+
+		count++
 	}
 }

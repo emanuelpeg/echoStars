@@ -1,7 +1,7 @@
 package database
 
 import (
-	"encoding/json"
+	"echoStars/util"
 	bolt "go.etcd.io/bbolt"
 	"os"
 )
@@ -16,15 +16,9 @@ type BoltDBImpl struct {
 }
 
 func NewBoltDB() (BoltDB, error) {
-	configFile, err := os.Open("database/config.json")
-	if err != nil {
-		return nil, err
-	}
-	defer configFile.Close()
-
 	var boltDb BoltDBImpl
-	decoder := json.NewDecoder(configFile)
-	if err := decoder.Decode(&boltDb); err != nil {
+	err := util.ReadJSONFile("database/config.json", &boltDb)
+	if err != nil {
 		return nil, err
 	}
 

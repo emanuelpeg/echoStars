@@ -134,7 +134,7 @@ const docTemplate = `{
         },
         "/notification/email": {
             "post": {
-                "description": "Send an email notification using the EmailNotification factory. Expects JSON data in the request body.",
+                "description": "Send an email notification using the EmailService factory. Expects JSON data in the request body.",
                 "consumes": [
                     "application/json"
                 ],
@@ -152,7 +152,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/notification.SendEmailRequest"
+                            "$ref": "#/definitions/notification.sendEmailRequest"
                         }
                     }
                 ],
@@ -160,7 +160,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/notification.SendEmailResponse"
+                            "$ref": "#/definitions/notification.sendEmailResponse"
                         }
                     }
                 }
@@ -236,7 +236,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "notification.SendEmailRequest": {
+        "notification.sendEmailRequest": {
             "type": "object",
             "properties": {
                 "body": {
@@ -250,7 +250,7 @@ const docTemplate = `{
                 }
             }
         },
-        "notification.SendEmailResponse": {
+        "notification.sendEmailResponse": {
             "type": "object",
             "properties": {
                 "message": {

@@ -26,8 +26,7 @@ func main() {
 
 	sysinfo.Init(e)
 	server.Init(e)
-
-	notification.RegisterNotificationRoutes(e)
+	notification.Init(e)
 
 	//swagger
 	e.GET("/swagger/*", echoSwagger.WrapHandler)

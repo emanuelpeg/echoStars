@@ -5,33 +5,39 @@ import (
 	"net/http"
 )
 
-type SendEmailRequest struct {
+func Init(e *echo.Echo) {
+	group := e.Group("/notification")
+
+	group.POST("/email", sendEmailNotification)
+}
+
+type sendEmailRequest struct {
 	Subject   string `json:"subject"`
 	Body      string `json:"body"`
 	Recipient string `json:"recipient"`
 }
 
-type SendEmailResponse struct {
+type sendEmailResponse struct {
 	Message string `json:"message"`
 }
 
-// SendEmailNotification godoc
+// sendEmailNotification godoc
 // @Summary Send an email notification.
-// @Description Send an email notification using the EmailNotification factory. Expects JSON data in the request body.
+// @Description Send an email notification using the EmailService factory. Expects JSON data in the request body.
 // @Tags email
 // @Accept json
 // @Produce json
-// @Param request body SendEmailRequest true "Email request"
-// @Success 200 {object} SendEmailResponse
+// @Param request body sendEmailRequest true "Email request"
+// @Success 200 {object} sendEmailResponse
 // @Router /notification/email [post]
-func SendEmailNotification(c echo.Context) error {
-	var request SendEmailRequest
+func sendEmailNotification(c echo.Context) error {
+	var request sendEmailRequest
 	if err := c.Bind(&request); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON request body"})
 	}
 
-	emailFactory := NewEmailNotificationFactory()
-	if err := emailFactory.SendNotification(request.Subject, request.Body, request.Recipient); err != nil {
+	emailService := NewEmailNotificationService()
+	if err := emailService.SendNotification(request.Subject, request.Body, request.Recipient); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 

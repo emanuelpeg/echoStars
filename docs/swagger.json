@@ -123,7 +123,7 @@
         },
         "/notification/email": {
             "post": {
-                "description": "Send an email notification using the EmailNotification factory. Expects JSON data in the request body.",
+                "description": "Send an email notification using the EmailService factory. Expects JSON data in the request body.",
                 "consumes": [
                     "application/json"
                 ],
@@ -141,7 +141,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/notification.SendEmailRequest"
+                            "$ref": "#/definitions/notification.sendEmailRequest"
                         }
                     }
                 ],
@@ -149,7 +149,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/notification.SendEmailResponse"
+                            "$ref": "#/definitions/notification.sendEmailResponse"
                         }
                     }
                 }
@@ -225,7 +225,7 @@
         }
     },
     "definitions": {
-        "notification.SendEmailRequest": {
+        "notification.sendEmailRequest": {
             "type": "object",
             "properties": {
                 "body": {
@@ -239,7 +239,7 @@
                 }
             }
         },
-        "notification.SendEmailResponse": {
+        "notification.sendEmailResponse": {
             "type": "object",
             "properties": {
                 "message": {

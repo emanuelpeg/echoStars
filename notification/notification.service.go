@@ -4,14 +4,14 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-type NotificationFactory interface {
+type NotificationService interface {
 	SendNotification(subject, body, recipient string) error
 }
 
-func NewEmailNotificationFactory() NotificationFactory {
+func NewEmailNotificationService() NotificationService {
 	config, err := loadEmailNotificationConfig()
 	if err != nil {
 		log.Fatal("Error loading email notification configuration:", err)
 	}
-	return NewEmailNotification(config)
+	return newEmailService(config)
 }

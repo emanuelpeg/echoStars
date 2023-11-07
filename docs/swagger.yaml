@@ -1,5 +1,5 @@
 definitions:
-  notification.SendEmailRequest:
+  notification.sendEmailRequest:
     properties:
       body:
         type: string
@@ -8,7 +8,7 @@ definitions:
       subject:
         type: string
     type: object
-  notification.SendEmailResponse:
+  notification.sendEmailResponse:
     properties:
       message:
         type: string
@@ -129,22 +129,22 @@ paths:
     post:
       consumes:
       - application/json
-      description: Send an email notification using the EmailNotification factory.
-        Expects JSON data in the request body.
+      description: Send an email notification using the EmailService factory. Expects
+        JSON data in the request body.
       parameters:
       - description: Email request
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/notification.SendEmailRequest'
+          $ref: '#/definitions/notification.sendEmailRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/notification.SendEmailResponse'
+            $ref: '#/definitions/notification.sendEmailResponse'
       summary: Send an email notification.
       tags:
       - email

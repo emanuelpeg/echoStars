@@ -13,20 +13,20 @@ type InfoDao interface {
 }
 
 type InfoDaoBolt struct {
+	boltDB database.BoltDB
 }
 
-func NewInfoDao() InfoDao {
-	return InfoDaoBolt{}
+func NewInfoDao(configFile string) (InfoDao, error) {
+	bolt, err := database.NewBoltDB(configFile)
+	if err != nil {
+		log.Info(err)
+		return nil, err
+	}
+	return InfoDaoBolt{boltDB: bolt}, nil
 }
 
 func (dao InfoDaoBolt) CheckDb() (bool, error) {
-	boltDB, err := database.NewBoltDB()
-	if err != nil {
-		log.Info(err)
-		return false, err
-	}
-
-	db, err := boltDB.Open()
+	db, err := dao.boltDB.Open()
 	if err != nil {
 		log.Info(err)
 		return false, err
@@ -37,13 +37,7 @@ func (dao InfoDaoBolt) CheckDb() (bool, error) {
 }
 
 func (dao InfoDaoBolt) SaveInfo(info *SysInfo) error {
-	boltDB, err := database.NewBoltDB()
-	if err != nil {
-		log.Info(err)
-		return err
-	}
-
-	db, err := boltDB.Open()
+	db, err := dao.boltDB.Open()
 	if err != nil {
 		log.Info(err)
 		return err
@@ -84,13 +78,7 @@ func (dao InfoDaoBolt) SaveInfo(info *SysInfo) error {
 }
 
 func (dao InfoDaoBolt) GetInfo() (*SysInfo, error) {
-	boltDB, err := database.NewBoltDB()
-	if err != nil {
-		log.Info(err)
-		return nil, err
-	}
-
-	db, err := boltDB.Open()
+	db, err := dao.boltDB.Open()
 	if err != nil {
 		log.Info(err)
 		return nil, err

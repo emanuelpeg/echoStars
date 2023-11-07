@@ -1,5 +1,7 @@
 package server
 
+import "echoStars/database"
+
 type ServerService interface {
 	Create(server *Server) (*Server, error)
 	GetAll() ([]*Server, error)
@@ -10,8 +12,12 @@ type ServerServiceImpl struct {
 	dao ServerDaoInterface
 }
 
-func NewServerService() ServerService {
-	return ServerServiceImpl{dao: NewServerDao()}
+func NewServerService() (ServerService, error) {
+	daoImpl, error := NewServerDao(database.ConfigFileName)
+	if error != nil {
+		return nil, error
+	}
+	return ServerServiceImpl{dao: daoImpl}, nil
 }
 
 func (service ServerServiceImpl) Create(server *Server) (*Server, error) {

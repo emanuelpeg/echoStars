@@ -17,18 +17,19 @@ type ServerDaoInterface interface {
 }
 
 type ServerDaoBolt struct {
+	boltDB database.BoltDB
 }
 
-func NewServerDao() ServerDaoInterface {
-	return ServerDaoBolt{}
-}
-func (s ServerDaoBolt) GetAll() ([]*Server, error) {
-	boltDB, err := database.NewBoltDB()
+func NewServerDao(configFile string) (ServerDaoInterface, error) {
+	bolt, err := database.NewBoltDB(configFile)
 	if err != nil {
 		log.Info(err)
 		return nil, err
 	}
-	db, err := boltDB.Open()
+	return ServerDaoBolt{boltDB: bolt}, nil
+}
+func (s ServerDaoBolt) GetAll() ([]*Server, error) {
+	db, err := s.boltDB.Open()
 	if err != nil {
 		log.Info(err)
 		return nil, err
@@ -66,12 +67,7 @@ func (s ServerDaoBolt) GetAll() ([]*Server, error) {
 }
 
 func (s ServerDaoBolt) Create(server *Server) (*Server, error) {
-	boltDB, err := database.NewBoltDB()
-	if err != nil {
-		log.Info(err)
-		return nil, err
-	}
-	db, err := boltDB.Open()
+	db, err := s.boltDB.Open()
 	defer db.Close()
 
 	tx, err := db.Begin(true)
@@ -108,12 +104,7 @@ func (s ServerDaoBolt) Create(server *Server) (*Server, error) {
 }
 
 func (s ServerDaoBolt) Delete(hostname *string) (bool, error) {
-	boltDB, err := database.NewBoltDB()
-	if err != nil {
-		log.Info(err)
-		return false, err
-	}
-	db, err := boltDB.Open()
+	db, err := s.boltDB.Open()
 	defer db.Close()
 	// TODO add find by 'id' in order to check if the server exists before delete.
 	tx, err := db.Begin(true)

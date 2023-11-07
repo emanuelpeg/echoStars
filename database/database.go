@@ -6,6 +6,8 @@ import (
 	"os"
 )
 
+var ConfigFileName string = "database/config.json"
+
 type BoltDB interface {
 	Open() (*bolt.DB, error)
 }
@@ -15,14 +17,18 @@ type BoltDBImpl struct {
 	FileMode uint   `json:"file_mode"`
 }
 
-func NewBoltDB() (BoltDB, error) {
+func newBoltDB(fileName string) (BoltDB, error) {
 	var boltDb BoltDBImpl
-	err := util.ReadJSONFile("database/config.json", &boltDb)
+	err := util.ReadJSONFile(fileName, &boltDb)
 	if err != nil {
 		return nil, err
 	}
 
 	return boltDb, nil
+}
+
+func NewBoltDB(configFile string) (BoltDB, error) {
+	return newBoltDB(configFile)
 }
 
 func (database BoltDBImpl) Open() (*bolt.DB, error) {

@@ -21,7 +21,11 @@ func Init(e *echo.Echo) {
 // @Success 200 {object} map[string]interface{}
 // @Router /info/database/check [get]
 func DataBaseHealthCheck(c echo.Context) error {
-	service := NewInfoService()
+	service, error := NewInfoService()
+	if error != nil {
+		return c.JSON(http.StatusInternalServerError, error)
+	}
+
 	isOk, error := service.CheckDb()
 	if isOk {
 		return c.JSON(http.StatusOK, map[string]interface{}{
@@ -45,8 +49,12 @@ func DataBaseHealthCheck(c echo.Context) error {
 // @Success 200 {object} sysinfo.SysInfo
 // @Router /info/save [get]
 func SaveInfo(c echo.Context) error {
-	var service = NewInfoService()
-	var info, error = service.SaveInfo()
+	var service, error = NewInfoService()
+	if error != nil {
+		return c.JSON(http.StatusInternalServerError, error)
+	}
+
+	info, error := service.SaveInfo()
 	if error == nil {
 		return c.JSON(http.StatusOK, info)
 	}
@@ -62,8 +70,12 @@ func SaveInfo(c echo.Context) error {
 // @Success 200 {object} sysinfo.SysInfo
 // @Router /info/getFromDb [get]
 func GetInfoFromDb(c echo.Context) error {
-	var service = NewInfoService()
-	var info, error = service.GetInfo()
+	var service, error = NewInfoService()
+	if error != nil {
+		return c.JSON(http.StatusInternalServerError, error)
+	}
+
+	info, error := service.GetInfo()
 	if error == nil {
 		if info == nil {
 			return c.JSON(http.StatusNotFound, info)

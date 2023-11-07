@@ -29,7 +29,11 @@ func createServer(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 	// TODO check if this could be pass as 'class' variable
-	var service = NewServerService()
+	var service, error = NewServerService()
+	if error != nil {
+		return c.JSON(http.StatusInternalServerError, error)
+	}
+
 	// call the (Abstraction) interface in the service
 	var createdServer, err = service.Create(&server)
 	// if the result has an err, return the server error
@@ -54,7 +58,11 @@ func createServer(c echo.Context) error {
 // @Success 200 {object} []server.Server
 // @Router /servers [get]
 func getServers(c echo.Context) error {
-	var service = NewServerService()
+	var service, error = NewServerService()
+	if error != nil {
+		return c.JSON(http.StatusInternalServerError, error)
+	}
+
 	servers, serviceError := service.GetAll()
 	if serviceError != nil {
 		return c.JSON(http.StatusBadRequest, serviceError)
@@ -73,7 +81,11 @@ func getServers(c echo.Context) error {
 func deleteServer(c echo.Context) error {
 	hostname := c.Param("hostname")
 
-	var service = NewServerService()
+	var service, error = NewServerService()
+	if error != nil {
+		return c.JSON(http.StatusInternalServerError, error)
+	}
+
 	if err := c.Bind(&Server{}); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}

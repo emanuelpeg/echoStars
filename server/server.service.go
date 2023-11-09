@@ -32,6 +32,6 @@ func (service ServerServiceImpl) GetAll() ([]*Server, error) {
 	return service.dao.GetAll()
 }
 
-func (service ServerServiceImpl) Delete(hostname *string) (bool, error) {
-	return service.dao.Delete(hostname)
+func (service ServerServiceImpl) Delete(url *string) (bool, error) {
+	return service.dao.Delete(url)
 }

@@ -10,7 +10,7 @@ func Init(e *echo.Echo) {
 	group := e.Group("/servers")
 	group.POST("", createServer)
 	group.GET("", getServers)
-	group.DELETE("/:hostname", deleteServer)
+	group.DELETE("/:url", deleteServer)
 }
 
 // CreateServer godoc
@@ -79,7 +79,7 @@ func getServers(c echo.Context) error {
 // @Success 200 {string} hostname
 // @Router /servers [delete]
 func deleteServer(c echo.Context) error {
-	hostname := c.Param("hostname")
+	url := c.Param("url")
 
 	var service, error = NewServerService()
 	if error != nil {
@@ -89,7 +89,7 @@ func deleteServer(c echo.Context) error {
 	if err := c.Bind(&Server{}); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	isDeleted, err := service.Delete(&hostname)
+	isDeleted, err := service.Delete(&url)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Internal server error")
 	}

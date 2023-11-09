@@ -89,7 +89,7 @@ func (s ServerDaoBolt) Create(server *Server) (*Server, error) {
 		return nil, err
 	}
 
-	err = bucket.Put([]byte(server.Hostname), buf)
+	err = bucket.Put([]byte(server.UrlHealth), buf)
 	if err != nil {
 		log.Info(err)
 		return nil, err

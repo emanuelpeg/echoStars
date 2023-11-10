@@ -54,7 +54,8 @@ func SaveInfo(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, error)
 	}
 
-	info, error := service.SaveInfo()
+	info := Info()
+	error = service.SaveInfo(info)
 	if error == nil {
 		return c.JSON(http.StatusOK, info)
 	}

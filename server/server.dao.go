@@ -13,7 +13,7 @@ const ServersTable = "servers"
 type ServerDaoInterface interface {
 	GetAll() ([]*Server, error)
 	Create(server *Server) (*Server, error)
-	Delete(hostname *string) (bool, error)
+	Delete(url *string) (bool, error)
 }
 
 type ServerDaoBolt struct {
@@ -89,7 +89,7 @@ func (s ServerDaoBolt) Create(server *Server) (*Server, error) {
 		return nil, err
 	}
 
-	err = bucket.Put([]byte(server.Hostname), buf)
+	err = bucket.Put([]byte(server.UrlHealth), buf)
 	if err != nil {
 		log.Info(err)
 		return nil, err

@@ -4,7 +4,7 @@ import "echoStars/database"
 
 type InfoService interface {
 	CheckDb() (bool, error)
-	SaveInfo() (*SysInfo, error)
+	SaveInfo(*SysInfo) error
 	GetInfo() (*SysInfo, error)
 }
 
@@ -24,10 +24,9 @@ func (service InfoServiceImpl) CheckDb() (bool, error) {
 	return service.dao.CheckDb()
 }
 
-func (service InfoServiceImpl) SaveInfo() (*SysInfo, error) {
-	info := Info()
+func (service InfoServiceImpl) SaveInfo(info *SysInfo) error {
 	error := service.dao.SaveInfo(info)
-	return info, error
+	return error
 }
 
 func (service InfoServiceImpl) GetInfo() (*SysInfo, error) {

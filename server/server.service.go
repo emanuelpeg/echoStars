@@ -1,6 +1,9 @@
 package server
 
-import "echoStars/database"
+import (
+	"echoStars/util"
+	"fmt"
+)
 
 type ServerService interface {
 	Create(server *Server) (*Server, error)
@@ -13,7 +16,7 @@ type ServerServiceImpl struct {
 }
 
 func NewServerService() (ServerService, error) {
-	daoImpl, error := NewServerDao(database.ConfigFileName)
+	daoImpl, error := NewServerDao()
 	if error != nil {
 		return nil, error
 	}
@@ -34,4 +37,28 @@ func (service ServerServiceImpl) GetAll() ([]*Server, error) {
 
 func (service ServerServiceImpl) Delete(url *string) (bool, error) {
 	return service.dao.Delete(url)
+}
+
+func Seed() error {
+	fmt.Println("Seed Starts...")
+	var servers []Server
+	err := util.ReadJSONFile("server/seed.json", &servers)
+	if err != nil {
+		return err
+	}
+
+	service, _ := NewServerService()
+	for _, server := range servers {
+		_, err := service.Create(&server)
+		if err != nil {
+			return err
+		}
+	}
+
+	createdServers, _ := service.GetAll()
+	for _, server := range createdServers {
+		fmt.Println("Created server: ", server)
+	}
+
+	return nil
 }

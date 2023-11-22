@@ -3,6 +3,7 @@ package sysinfo
 import (
 	"echoStars/database"
 	"encoding/json"
+
 	"github.com/labstack/gommon/log"
 )
 
@@ -16,8 +17,8 @@ type InfoDaoBolt struct {
 	boltDB database.BoltDB
 }
 
-func NewInfoDao(configFile string) (InfoDao, error) {
-	bolt, err := database.NewBoltDB(configFile)
+func NewInfoDao() (InfoDao, error) {
+	bolt, err := database.NewBoltDB()
 	if err != nil {
 		log.Info(err)
 		return nil, err

@@ -21,3 +21,6 @@
 go.work
 
 .idea/
+
+database/config.local.json
+data.local.db

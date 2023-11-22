@@ -1,0 +1,20 @@
+[
+    {
+        "hostname": "github.com",
+        "url": "https://github.com",
+        "status": true,
+        "frequency": 3000
+    },
+    {
+        "hostname": "stackoverflow.com",
+        "url": "https://stackoverflow.com",
+        "status": true,
+        "frequency": 10000
+    },
+    {
+        "hostname": "intel.com",
+        "url": "https://intel.com",
+        "status": true,
+        "frequency": 15000
+    }
+]

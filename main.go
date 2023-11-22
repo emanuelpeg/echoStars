@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "echoStars/docs"
+	"echoStars/monitor"
 	"echoStars/notification"
 	"echoStars/server"
 	"echoStars/sysinfo"
@@ -26,7 +27,9 @@ func main() {
 
 	sysinfo.Init(e)
 	server.Init(e)
+	server.Seed()
 	notification.Init(e)
+	monitor.Start()
 
 	//swagger
 	e.GET("/swagger/*", echoSwagger.WrapHandler)

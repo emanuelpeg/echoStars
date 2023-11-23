@@ -3,18 +3,24 @@
         "hostname": "github.com",
         "url": "https://github.com",
         "status": true,
-        "frequency": 3000
+        "frequency": 6000
     },
     {
         "hostname": "stackoverflow.com",
         "url": "https://stackoverflow.com",
         "status": true,
-        "frequency": 10000
+        "frequency": 12000
     },
     {
         "hostname": "intel.com",
         "url": "https://intel.com",
         "status": true,
-        "frequency": 15000
+        "frequency": 18000
+    },
+    {
+        "hostname": "badserver.com",
+        "url": "badserver.com",
+        "status": true,
+        "frequency": 10000
     }
 ]

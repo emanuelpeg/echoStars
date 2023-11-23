@@ -13,7 +13,7 @@ const ServersTable = "servers"
 
 type ServerDaoInterface interface {
 	GetAll() ([]*Server, error)
-	Create(server *Server) (*Server, error)
+	Upsert(server *Server) (*Server, error)
 	Delete(url *string) (bool, error)
 }
 
@@ -29,6 +29,7 @@ func NewServerDao() (ServerDaoInterface, error) {
 	}
 	return ServerDaoBolt{boltDB: bolt}, nil
 }
+
 func (s ServerDaoBolt) GetAll() ([]*Server, error) {
 	db, err := s.boltDB.Open()
 	if err != nil {
@@ -67,7 +68,7 @@ func (s ServerDaoBolt) GetAll() ([]*Server, error) {
 	return servers, nil
 }
 
-func (s ServerDaoBolt) Create(server *Server) (*Server, error) {
+func (s ServerDaoBolt) Upsert(server *Server) (*Server, error) {
 	db, err := s.boltDB.Open()
 	if err != nil {
 		return nil, err

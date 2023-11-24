@@ -6,7 +6,10 @@ import (
 	"echoStars/notification"
 	"echoStars/server"
 	"echoStars/sysinfo"
+	"echoStars/util"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -14,6 +17,13 @@ import (
 )
 
 func main() {
+	// Get the profile from environment variable
+	activeProfile := os.Getenv("APP_PROFILE")
+	if activeProfile == "" {
+		log.Fatal("No application profile provided (APP_PROFILE)")
+	}
+	util.LoadConfig(activeProfile)
+
 	// Echo instance
 	e := echo.New()
 

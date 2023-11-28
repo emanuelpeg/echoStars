@@ -7,13 +7,29 @@ import (
 	"time"
 )
 
+type MonitorService interface {
+	Start() error
+}
+
+type MonitorServiceImpl struct {
+	serverService server.ServerService
+}
+
+func NewMonitorService() (MonitorService, error) {
+	serverImpl, error := server.NewServerService()
+	if error != nil {
+		return nil, error
+	}
+	return MonitorServiceImpl{serverService: serverImpl}, nil
+}
+
 var serverService server.ServerService
 
 func init() {
 	serverService, _ = server.NewServerService()
 }
 
-func Start() error {
+func (service MonitorServiceImpl) Start() error {
 	if serverService == nil {
 		return fmt.Errorf("error creating server service")
 	}

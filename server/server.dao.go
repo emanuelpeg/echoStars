@@ -4,14 +4,13 @@ import (
 	"echoStars/database"
 	"encoding/json"
 	"fmt"
-
 	"github.com/labstack/gommon/log"
 	bolt "go.etcd.io/bbolt"
 )
 
 const ServersTable = "servers"
 
-type ServerDaoInterface interface {
+type ServerDao interface {
 	GetAll() ([]*Server, error)
 	Upsert(server *Server) (*Server, error)
 	Delete(url *string) (bool, error)
@@ -21,7 +20,7 @@ type ServerDaoBolt struct {
 	boltDB database.BoltDB
 }
 
-func NewServerDao() (ServerDaoInterface, error) {
+func NewServerDao() (ServerDao, error) {
 	bolt, err := database.NewBoltDB()
 	if err != nil {
 		log.Info(err)

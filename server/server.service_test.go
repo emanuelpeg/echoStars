@@ -6,19 +6,19 @@ import (
 	"testing"
 )
 
-func TestServiceCreateServer(t *testing.T) {
+func TestServiceUpsertServer(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
-	daoImpl := NewMockServerDaoI(mockCtrl)
+	daoImpl := NewMockServerDao(mockCtrl)
 
 	// Create a service without function NewServerService because it is a test,
 	// and it should use the mock dao.
 	var service = ServerServiceImpl{dao: daoImpl}
 	var server = getFakeServer("http://server-a.com")
 	var serverReturn = getFakeServer("http://server-a.com")
-	daoImpl.EXPECT().Create(server).Return(serverReturn, nil)
+	daoImpl.EXPECT().Upsert(server).Return(serverReturn, nil)
 
-	if created, err := service.Create(server); err == nil {
+	if created, err := service.Upsert(server); err == nil {
 		assert.Equal(t, server, created, "Test Server should equal expected just new server")
 	} else {
 		t.Fatal("Error: creating Server ", err)
@@ -29,7 +29,7 @@ func TestServiceCreateServer(t *testing.T) {
 func TestServiceGetAll(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
-	daoImpl := NewMockServerDaoI(mockCtrl)
+	daoImpl := NewMockServerDao(mockCtrl)
 
 	var servers []*Server
 	servers = append(servers, getFakeServer("http://server-a.com"))
@@ -50,9 +50,10 @@ func TestServiceGetAll(t *testing.T) {
 
 func getFakeServer(urlHealth string) *Server {
 	mailTo := "someone@company.com"
+	ip := "127.0.0.1"
 	return &Server{
 		Hostname:  "test",
-		Ip:        "127.0.0.1",
+		Ip:        &ip,
 		UrlHealth: urlHealth,
 		Status:    false,
 		MailTo:    &mailTo,

@@ -24,7 +24,9 @@ Go to the directory of the source code and build:
 >go build
 
 then, you can run the application (if you are running in Windows, don't forget scape the :
->go run main.go
+>$env:APP_PROFILE="dev"; go run main.go
+
+the `AP_PROFILE` environment variable will indicate which `.property` file the app will use
 
 EchoStart is a Web application that runs on port _1323_. Please, check logs and then you can open in your preferred browser; here you have the api documentation http://localhost:1323/swagger/index.html uri.
 

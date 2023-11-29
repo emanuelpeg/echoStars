@@ -1,7 +1,5 @@
 package sysinfo
 
-import "echoStars/database"
-
 type InfoService interface {
 	CheckDb() (bool, error)
 	SaveInfo(*SysInfo) error
@@ -13,7 +11,7 @@ type InfoServiceImpl struct {
 }
 
 func NewInfoService() (InfoService, error) {
-	daoImpl, error := NewInfoDao(database.ConfigFileName)
+	daoImpl, error := NewInfoDao()
 	if error != nil {
 		return nil, error
 	}

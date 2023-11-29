@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "echoStars/docs"
+	"echoStars/monitor"
 	"echoStars/notification"
 	"echoStars/server"
 	"echoStars/sysinfo"
@@ -36,7 +37,13 @@ func main() {
 
 	sysinfo.Init(e)
 	server.Init(e)
+	server.Seed()
 	notification.Init(e)
+	monitorService, err := monitor.NewMonitorService()
+	if err != nil {
+		e.Logger.Fatal("Can't start monitoring service")
+	}
+	monitorService.Start()
 
 	//swagger
 	e.GET("/swagger/*", echoSwagger.WrapHandler)

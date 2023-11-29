@@ -1,12 +1,18 @@
 package sysinfo
 
 import (
+	"echoStars/database"
 	"testing"
 )
 
+func beforeEeach() {
+	database.ConfigFileName = "../database/config_test.json"
+}
+
 // TestNewInfoDao call NewInfoDao and check that it doesn't return nil
 func TestNewInfoDao(t *testing.T) {
-	_, error := NewInfoDao("../database/config.json")
+	beforeEeach()
+	_, error := NewInfoDao()
 
 	if error != nil {
 		t.Fatal("Error: the NewInfoDao should return a dao", error)
@@ -14,7 +20,8 @@ func TestNewInfoDao(t *testing.T) {
 }
 
 func TestSaveInfo(t *testing.T) {
-	var dao, error = NewInfoDao("../database/config_test.json")
+	beforeEeach()
+	var dao, error = NewInfoDao()
 
 	if error != nil {
 		t.Fatal("Error: the NewInfoDao should return a dao", error)

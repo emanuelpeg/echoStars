@@ -2,8 +2,9 @@ package database
 
 import (
 	"echoStars/util"
+	"strings"
+
 	bolt "go.etcd.io/bbolt"
-	"os"
 )
 
 var ConfigFileName string = "database/config.json"
@@ -17,20 +18,20 @@ type BoltDBImpl struct {
 	FileMode uint   `json:"file_mode"`
 }
 
-func newBoltDB(fileName string) (BoltDB, error) {
+func NewBoltDB() (BoltDB, error) {
 	var boltDb BoltDBImpl
-	err := util.ReadJSONFile(fileName, &boltDb)
+	localConfigFile := strings.Replace(ConfigFileName, "json", "local.json", 1)
+	err := util.ReadJSONFile(localConfigFile, &boltDb)
 	if err != nil {
-		return nil, err
+		err := util.ReadJSONFile(ConfigFileName, &boltDb)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return boltDb, nil
 }
 
-func NewBoltDB(configFile string) (BoltDB, error) {
-	return newBoltDB(configFile)
-}
-
 func (database BoltDBImpl) Open() (*bolt.DB, error) {
-	return bolt.Open(database.FileName, os.FileMode(database.FileMode), nil)
+	return bolt.Open(database.FileName, 0600, nil)
 }

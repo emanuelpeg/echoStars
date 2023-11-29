@@ -35,7 +35,7 @@ func createServer(c echo.Context) error {
 	}
 
 	// call the (Abstraction) interface in the service
-	var createdServer, err = service.Create(&server)
+	var createdServer, err = service.Upsert(&server)
 	// if the result has an err, return the server error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)

@@ -4,6 +4,7 @@ import (
 	"echoStars/database"
 	"encoding/json"
 	"fmt"
+
 	"github.com/labstack/gommon/log"
 	bolt "go.etcd.io/bbolt"
 )
@@ -12,7 +13,7 @@ const ServersTable = "servers"
 
 type ServerDaoInterface interface {
 	GetAll() ([]*Server, error)
-	Create(server *Server) (*Server, error)
+	Upsert(server *Server) (*Server, error)
 	Delete(url *string) (bool, error)
 }
 
@@ -20,14 +21,15 @@ type ServerDaoBolt struct {
 	boltDB database.BoltDB
 }
 
-func NewServerDao(configFile string) (ServerDaoInterface, error) {
-	bolt, err := database.NewBoltDB(configFile)
+func NewServerDao() (ServerDaoInterface, error) {
+	bolt, err := database.NewBoltDB()
 	if err != nil {
 		log.Info(err)
 		return nil, err
 	}
 	return ServerDaoBolt{boltDB: bolt}, nil
 }
+
 func (s ServerDaoBolt) GetAll() ([]*Server, error) {
 	db, err := s.boltDB.Open()
 	if err != nil {
@@ -66,8 +68,11 @@ func (s ServerDaoBolt) GetAll() ([]*Server, error) {
 	return servers, nil
 }
 
-func (s ServerDaoBolt) Create(server *Server) (*Server, error) {
+func (s ServerDaoBolt) Upsert(server *Server) (*Server, error) {
 	db, err := s.boltDB.Open()
+	if err != nil {
+		return nil, err
+	}
 	defer db.Close()
 
 	tx, err := db.Begin(true)
@@ -105,6 +110,10 @@ func (s ServerDaoBolt) Create(server *Server) (*Server, error) {
 
 func (s ServerDaoBolt) Delete(hostname *string) (bool, error) {
 	db, err := s.boltDB.Open()
+	if err != nil {
+		return false, err
+	}
+
 	defer db.Close()
 	// TODO add find by 'id' in order to check if the server exists before delete.
 	tx, err := db.Begin(true)

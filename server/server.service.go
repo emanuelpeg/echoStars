@@ -7,23 +7,23 @@ type ServerService interface {
 }
 
 type ServerServiceImpl struct {
-	dao ServerDaoInterface
+	dao ServerDao
 }
 
 func NewServerService() (ServerService, error) {
-	daoImpl, error := NewServerDao()
-	if error != nil {
-		return nil, error
+	daoImpl, err := NewServerDao()
+	if err != nil {
+		return nil, err
 	}
 	return ServerServiceImpl{dao: daoImpl}, nil
 }
 
 func (service ServerServiceImpl) Upsert(server *Server) (*Server, error) {
-	newServer, err := service.dao.Upsert(server)
-	if err != nil {
-		return nil, err
+	var err error
+	if newServer, err := service.dao.Upsert(server); err == nil {
+		return newServer, nil
 	}
-	return newServer, nil
+	return nil, err
 }
 
 func (service ServerServiceImpl) GetAll() ([]*Server, error) {

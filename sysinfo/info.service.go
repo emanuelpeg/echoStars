@@ -2,12 +2,13 @@ package sysinfo
 
 type InfoService interface {
 	CheckDb() (bool, error)
-	SaveInfo(*SysInfo) error
+	SaveInfo() (*SysInfo, error)
 	GetInfo() (*SysInfo, error)
 }
 
 type InfoServiceImpl struct {
-	dao InfoDao
+	dao  InfoDao
+	util InfoUtil
 }
 
 func NewInfoService() (InfoService, error) {
@@ -15,16 +16,17 @@ func NewInfoService() (InfoService, error) {
 	if error != nil {
 		return nil, error
 	}
-	return InfoServiceImpl{dao: daoImpl}, nil
+	return InfoServiceImpl{dao: daoImpl, util: InfoUtilImpl{}}, nil
 }
 
 func (service InfoServiceImpl) CheckDb() (bool, error) {
 	return service.dao.CheckDb()
 }
 
-func (service InfoServiceImpl) SaveInfo(info *SysInfo) error {
+func (service InfoServiceImpl) SaveInfo() (*SysInfo, error) {
+	info := service.util.Info()
 	error := service.dao.SaveInfo(info)
-	return error
+	return info, error
 }
 
 func (service InfoServiceImpl) GetInfo() (*SysInfo, error) {

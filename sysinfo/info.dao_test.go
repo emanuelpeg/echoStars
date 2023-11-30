@@ -27,15 +27,7 @@ func TestSaveInfo(t *testing.T) {
 		t.Fatal("Error: the NewInfoDao should return a dao", error)
 	}
 
-	var info = SysInfo{
-		Hostname:     "test",
-		Platform:     "testOs",
-		Uptime:       200,
-		RAM:          2000,
-		RAMAvailable: 1000,
-		RAMFree:      500,
-		Disk:         100,
-	}
+	var info = getSysInfoExample()
 
 	error = dao.SaveInfo(&info)
 	if error != nil {

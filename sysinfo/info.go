@@ -6,6 +6,13 @@ import (
 	"github.com/shirou/gopsutil/mem"
 )
 
+type InfoUtil interface {
+	Info() *SysInfo
+}
+
+type InfoUtilImpl struct {
+}
+
 type SysInfo struct {
 	Hostname     string `json:"hostname"`
 	Platform     string `json:"platform"`
@@ -16,7 +23,7 @@ type SysInfo struct {
 	Disk         uint64 `json:"disk"`
 }
 
-func Info() *SysInfo {
+func (util InfoUtilImpl) Info() *SysInfo {
 	hostStat, _ := host.Info()
 	vmStat, _ := mem.VirtualMemory()
 	diskStat, _ := disk.Usage("\\") // If you're in Unix change this "\\" for "/"

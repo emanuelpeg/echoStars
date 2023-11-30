@@ -35,7 +35,15 @@ func main() {
 	e.GET("/health/check", HealthCheck)
 	e.GET("/health/info", Info)
 
-	sysinfo.Init(e)
+	serviceInfo, error := sysinfo.NewInfoService()
+
+	if error == nil {
+		infoController := sysinfo.InfoControllerImpl{Service: serviceInfo}
+		infoController.Init(e)
+	} else {
+		e.Logger.Error(error)
+	}
+
 	server.Init(e)
 	server.Seed()
 	notification.Init(e)
@@ -75,5 +83,6 @@ func HealthCheck(c echo.Context) error {
 // @Success 200 {object} sysinfo.SysInfo
 // @Router /health/info [get]
 func Info(c echo.Context) error {
-	return c.JSON(http.StatusOK, sysinfo.Info())
+	sys := sysinfo.InfoUtilImpl{}
+	return c.JSON(http.StatusOK, sys.Info())
 }

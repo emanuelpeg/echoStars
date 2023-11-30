@@ -5,11 +5,22 @@ import (
 	"net/http"
 )
 
-func Init(e *echo.Echo) {
+type InfoController interface {
+	Init(e *echo.Echo)
+	DataBaseHealthCheck(c echo.Context) error
+	SaveInfo(c echo.Context) error
+	GetInfoFromDb(c echo.Context) error
+}
+
+type InfoControllerImpl struct {
+	Service InfoService
+}
+
+func (controller InfoControllerImpl) Init(e *echo.Echo) {
 	group := e.Group("/info")
-	group.GET("/database/check", DataBaseHealthCheck)
-	group.GET("/save", SaveInfo)
-	group.GET("/getFromDb", GetInfoFromDb)
+	group.GET("/database/check", controller.DataBaseHealthCheck)
+	group.GET("/save", controller.SaveInfo)
+	group.GET("/getFromDb", controller.GetInfoFromDb)
 }
 
 // DataBaseHealthCheck godoc
@@ -20,13 +31,8 @@ func Init(e *echo.Echo) {
 // @Produce json
 // @Success 200 {object} map[string]interface{}
 // @Router /info/database/check [get]
-func DataBaseHealthCheck(c echo.Context) error {
-	service, error := NewInfoService()
-	if error != nil {
-		return c.JSON(http.StatusInternalServerError, error)
-	}
-
-	isOk, error := service.CheckDb()
+func (controller InfoControllerImpl) DataBaseHealthCheck(c echo.Context) error {
+	isOk, error := controller.Service.CheckDb()
 	if isOk {
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"data":  "Database is up and running",
@@ -48,14 +54,8 @@ func DataBaseHealthCheck(c echo.Context) error {
 // @Produce json
 // @Success 200 {object} sysinfo.SysInfo
 // @Router /info/save [get]
-func SaveInfo(c echo.Context) error {
-	var service, error = NewInfoService()
-	if error != nil {
-		return c.JSON(http.StatusInternalServerError, error)
-	}
-
-	info := Info()
-	error = service.SaveInfo(info)
+func (controller InfoControllerImpl) SaveInfo(c echo.Context) error {
+	info, error := controller.Service.SaveInfo()
 	if error == nil {
 		return c.JSON(http.StatusOK, info)
 	}
@@ -70,13 +70,8 @@ func SaveInfo(c echo.Context) error {
 // @Produce json
 // @Success 200 {object} sysinfo.SysInfo
 // @Router /info/getFromDb [get]
-func GetInfoFromDb(c echo.Context) error {
-	var service, error = NewInfoService()
-	if error != nil {
-		return c.JSON(http.StatusInternalServerError, error)
-	}
-
-	info, error := service.GetInfo()
+func (controller InfoControllerImpl) GetInfoFromDb(c echo.Context) error {
+	info, error := controller.Service.GetInfo()
 	if error == nil {
 		if info == nil {
 			return c.JSON(http.StatusNotFound, info)

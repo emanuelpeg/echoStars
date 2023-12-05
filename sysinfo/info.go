@@ -4,6 +4,7 @@ import (
 	"github.com/shirou/gopsutil/disk"
 	"github.com/shirou/gopsutil/host"
 	"github.com/shirou/gopsutil/mem"
+	"runtime"
 )
 
 type InfoUtil interface {
@@ -26,17 +27,33 @@ type SysInfo struct {
 func (util InfoUtilImpl) Info() *SysInfo {
 	hostStat, _ := host.Info()
 	vmStat, _ := mem.VirtualMemory()
-	diskStat, _ := disk.Usage("\\") // If you're in Unix change this "\\" for "/"
 
+	var path string
+	os := runtime.GOOS
+
+	if os == "windows" {
+		path = "\\"
+	} else {
+		path = "/"
+	}
+	diskStat, _ := disk.Usage(path)
 	info := new(SysInfo)
 
-	info.Hostname = hostStat.Hostname
-	info.Platform = hostStat.Platform
-	info.Uptime = hostStat.Uptime
-	info.RAM = vmStat.Total / 1024 / 1024
-	info.RAMAvailable = vmStat.Available / 1024 / 1024
-	info.RAMFree = vmStat.Free / 1024 / 1024
-	info.Disk = diskStat.Total / 1024 / 1024
+	if hostStat != nil {
+		info.Hostname = hostStat.Hostname
+		info.Platform = hostStat.Platform
+		info.Uptime = hostStat.Uptime
+	}
+
+	if vmStat != nil {
+		info.RAM = vmStat.Total / 1024 / 1024
+		info.RAMAvailable = vmStat.Available / 1024 / 1024
+		info.RAMFree = vmStat.Free / 1024 / 1024
+	}
+
+	if diskStat != nil {
+		info.Disk = diskStat.Total / 1024 / 1024
+	}
 
 	return info
 }

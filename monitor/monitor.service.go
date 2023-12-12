@@ -25,11 +25,9 @@ func NewMonitorService() (MonitorService, error) {
 
 var serverService server.ServerService
 
-func init() {
-	serverService, _ = server.NewServerService()
-}
-
 func (service MonitorServiceImpl) Start() error {
+	serverService, _ = server.NewServerService()
+
 	if serverService == nil {
 		return fmt.Errorf("error creating server service")
 	}

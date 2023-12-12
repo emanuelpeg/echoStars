@@ -1,17 +1,32 @@
 package sysinfo
 
 import (
-	"echoStars/database"
+	"echoStars/util"
 	"testing"
 )
 
-func beforeEeach() {
-	database.ConfigFileName = "../database/config_test.json"
+// commonSetupDone is used to ensure that common setup is performed only once.
+var commonSetupDone bool
+
+// commonSetup performs the common setup required for all tests.
+func commonSetup() {
+	if !commonSetupDone {
+		util.LoadConfig("../test")
+		commonSetupDone = true
+	}
+}
+
+// TestMain is executed before any test in the package.
+func TestMain(m *testing.M) {
+	// Perform common setup before running all tests
+	commonSetup()
+
+	// Run all tests in the package
+	m.Run()
 }
 
 // TestNewInfoDao call NewInfoDao and check that it doesn't return nil
 func TestNewInfoDao(t *testing.T) {
-	beforeEeach()
 	_, error := NewInfoDao()
 
 	if error != nil {
@@ -20,7 +35,6 @@ func TestNewInfoDao(t *testing.T) {
 }
 
 func TestSaveInfo(t *testing.T) {
-	beforeEeach()
 	var dao, error = NewInfoDao()
 
 	if error != nil {

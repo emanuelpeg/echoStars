@@ -7,23 +7,25 @@ import (
 	"echoStars/server"
 	"echoStars/sysinfo"
 	"echoStars/util"
-	"log"
-	"net/http"
-	"os"
-
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
+	"log"
+	"net/http"
+	"os"
 )
 
-func main() {
-	// Get the profile from environment variable
+// The init() function is executed before the main() function in a package and may be executed in an unexpected order
+// if multiple packages are being used. Here it is used to load the application configuration.
+func init() {
 	activeProfile := os.Getenv("APP_PROFILE")
 	if activeProfile == "" {
 		log.Fatal("No application profile provided (APP_PROFILE)")
 	}
 	util.LoadConfig(activeProfile)
+}
 
+func main() {
 	// Echo instance
 	e := echo.New()
 

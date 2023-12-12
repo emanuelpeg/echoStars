@@ -1,19 +1,34 @@
 package server
 
 import (
-	"echoStars/database"
+	"echoStars/util"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func beforeEeach() {
-	database.ConfigFileName = "../database/config_test.json"
+// commonSetupDone is used to ensure that common setup is performed only once.
+var commonSetupDone bool
+
+// commonSetup performs the common setup required for all tests.
+func commonSetup() {
+	if !commonSetupDone {
+		util.LoadConfig("../test")
+		commonSetupDone = true
+	}
+}
+
+// TestMain is executed before any test in the package.
+func TestMain(m *testing.M) {
+	// Perform common setup before running all tests
+	commonSetup()
+
+	// Run all tests in the package
+	m.Run()
 }
 
 // TestNewServerDao call NewServerDao and check that it doesn't return nil
 func TestNewServerDao(t *testing.T) {
-	beforeEeach()
 	_, err := NewServerDao()
 
 	if err != nil {
@@ -22,7 +37,6 @@ func TestNewServerDao(t *testing.T) {
 }
 
 func TestCreateServer(t *testing.T) {
-	beforeEeach()
 	var dao, err = NewServerDao()
 
 	if err != nil {
@@ -51,7 +65,6 @@ func TestCreateServer(t *testing.T) {
 }
 
 func TestGetAllServer(t *testing.T) {
-	beforeEeach()
 	dao, err := NewServerDao()
 	if err != nil {
 		t.Fatal("Error: the NewServerDao should return a dao", err)
@@ -78,7 +91,6 @@ func TestGetAllServer(t *testing.T) {
 }
 
 func getServerByUrl(urlHealth string) *Server {
-	beforeEeach()
 	email := "some-user@testserver.com"
 	ip := "127.0.10.0"
 

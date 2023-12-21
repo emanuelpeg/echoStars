@@ -1,0 +1,36 @@
+title echoStarts
+
+actor InfoController#gray
+participant ServerController #lightblue
+
+control MonitorService#lightgreen
+
+participant ServerService #lightblue
+materialdesignicons f15AB Registered Services #gray
+participant ServerDao #lightblue
+database Bold #lightblue
+
+alt case 1 - Server registring
+InfoController->ServerController:HTTP operations (create, get, delete)
+ServerController->ServerController:validations
+ServerController->ServerService:
+ServerService->ServerDao:(Upsert, GetAll,Delete)
+ServerDao->Bold:db operations
+ServerDao<--Bold:
+ServerController<--ServerService:
+InfoController<--ServerController:HTTP Response
+end
+
+alt case 2 - Server  Monitoring
+note over MonitorService#lightgreen:Start
+MonitorService->ServerService:GetAll
+ServerService->ServerDao:
+ServerDao->Bold:getAll
+ServerDao<--Bold:
+ServerService<--ServerDao:
+MonitorService<--ServerService:list of all registered servers
+note over MonitorService#lightgreen:Watch Servers
+MonitorService->MonitorService:pooling
+MonitorService->Registered Services:get health Url
+MonitorService<--Registered Services:status
+end

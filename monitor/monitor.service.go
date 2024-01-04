@@ -1,9 +1,10 @@
 package monitor
 
 import (
+	"echoStars/notification"
 	"echoStars/server"
+	"echoStars/util"
 	"fmt"
-	"net/http"
 	"time"
 )
 
@@ -12,27 +13,21 @@ type MonitorService interface {
 }
 
 type MonitorServiceImpl struct {
-	serverService server.ServerService
+	serverService       server.ServerService
+	notificationService notification.NotificationService
 }
 
 func NewMonitorService() (MonitorService, error) {
-	serverImpl, error := server.NewServerService()
+	serverServiceImpl, error := server.NewServerService()
+	notificationServiceImpl := notification.NewEmailNotificationService()
 	if error != nil {
 		return nil, error
 	}
-	return MonitorServiceImpl{serverService: serverImpl}, nil
+	return &MonitorServiceImpl{serverService: serverServiceImpl, notificationService: notificationServiceImpl}, nil
 }
 
-var serverService server.ServerService
-
-func (service MonitorServiceImpl) Start() error {
-	serverService, _ = server.NewServerService()
-
-	if serverService == nil {
-		return fmt.Errorf("error creating server service")
-	}
-
-	servers, err := serverService.GetAll()
+func (service *MonitorServiceImpl) Start() error {
+	servers, err := service.serverService.GetAll()
 	if err != nil {
 		fmt.Println("Error getting servers: ", err)
 		return err
@@ -42,33 +37,66 @@ func (service MonitorServiceImpl) Start() error {
 		return fmt.Errorf("no servers to watch")
 	}
 
-	watchServers(servers)
+	service.watchServers(servers)
 
 	return nil
 }
 
-func watchServers(servers []*server.Server) {
+func (service *MonitorServiceImpl) watchServers(servers []*server.Server) {
 	for _, thisServer := range servers {
 		go func(thisServer *server.Server) {
 			for range time.Tick(time.Millisecond * time.Duration(thisServer.Frequency)) {
 				start := time.Now()
-				res, err := http.Get(thisServer.UrlHealth)
-				newStatus := server.Down
-				if err != nil {
-					fmt.Println("SERVER URL GET ERR: ", err)
+				newStatus := service.serverService.HealthCheck(thisServer.UrlHealth)
+				if !newStatus {
+					fmt.Println("Server URL ERR", thisServer.UrlHealth, time.Since(start))
 				} else {
-					fmt.Println("SERVER URL GET RES: ", res.Request.URL, res.StatusCode, time.Since(start))
-					newStatus = server.Up
+					fmt.Println("Server URL OK: ", thisServer.UrlHealth, time.Since(start))
 				}
 				if thisServer.Status != newStatus {
-					thisServer.Status = newStatus
-					_, err := serverService.Upsert(thisServer)
-					if err != nil {
-						fmt.Println("Err updating server status: ", err)
+					err := service.updateServerStatus(thisServer)
+					if err == nil {
+						service.notifyStatusChange(thisServer)
 					}
 
 				}
 			}
 		}(thisServer)
 	}
+}
+
+func (service *MonitorServiceImpl) updateServerStatus(thisServer *server.Server) error {
+	thisServer.Status = !thisServer.Status
+	_, err := service.serverService.Upsert(thisServer)
+	if err != nil {
+		fmt.Println("Err updating server status: ", err)
+	}
+	return err
+}
+
+func (service *MonitorServiceImpl) notifyStatusChange(thisServer *server.Server) error {
+	prettyStatus := "DOWN"
+	if thisServer.Status {
+		prettyStatus = "UP"
+	}
+	serverStatusChangeMsg := fmt.Sprintf("STATUS CHANGE. Server %s is: %v!", thisServer.Hostname, prettyStatus)
+	fmt.Println(serverStatusChangeMsg)
+	var recipient string
+	if thisServer.MailTo != nil {
+		recipient = *thisServer.MailTo
+	} else {
+		recipient = util.ApplicationConfig.GetString("notification.recipient")
+	}
+	if recipient != "" {
+		err := service.notificationService.SendNotification("Server status changed", serverStatusChangeMsg, recipient)
+		if err != nil {
+			fmt.Println("Err sending status change notification: ", err)
+		} else {
+			fmt.Println("Notification sent to: ", recipient)
+		}
+	} else {
+		return fmt.Errorf("no recipients found")
+	}
+
+	return nil
 }

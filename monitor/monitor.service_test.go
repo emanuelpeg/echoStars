@@ -73,9 +73,9 @@ func TestStartServers(t *testing.T) {
 
 	inputServers := getFakeServers()
 	mockServerService.EXPECT().GetAll().Return(inputServers, nil)
-	mockServerService.EXPECT().HealthCheck(inputServers[0].UrlHealth).Return(server.Up)
-	mockServerService.EXPECT().HealthCheck(inputServers[1].UrlHealth).Times(2).Return(server.Up)
-	mockServerService.EXPECT().HealthCheck(inputServers[2].UrlHealth).Return(server.Down)
+	mockServerService.EXPECT().HealthCheck(inputServers[0].UrlHealth).Return(server.Up, 200)
+	mockServerService.EXPECT().HealthCheck(inputServers[1].UrlHealth).Times(2).Return(server.Up, 200)
+	mockServerService.EXPECT().HealthCheck(inputServers[2].UrlHealth).Return(server.Down, 500)
 	mockServerService.EXPECT().Upsert(inputServers[0]).Return(inputServers[0], nil)
 	mockServerService.EXPECT().Upsert(inputServers[2]).Return(inputServers[2], nil)
 

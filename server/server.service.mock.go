@@ -69,11 +69,12 @@ func (mr *MockServerServiceMockRecorder) GetAll() *gomock.Call {
 }
 
 // HealthCheck mocks base method.
-func (m *MockServerService) HealthCheck(urlHealth string) ServerStatus {
+func (m *MockServerService) HealthCheck(urlHealth string) (ServerStatus, int) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HealthCheck", urlHealth)
 	ret0, _ := ret[0].(ServerStatus)
-	return ret0
+	ret1, _ := ret[1].(int)
+	return ret0, ret1
 }
 
 // HealthCheck indicates an expected call of HealthCheck.

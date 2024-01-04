@@ -47,11 +47,11 @@ func (service *MonitorServiceImpl) watchServers(servers []*server.Server) {
 		go func(thisServer *server.Server) {
 			for range time.Tick(time.Millisecond * time.Duration(thisServer.Frequency)) {
 				start := time.Now()
-				newStatus := service.serverService.HealthCheck(thisServer.UrlHealth)
+				newStatus, statusCode := service.serverService.HealthCheck(thisServer.UrlHealth)
 				if !newStatus {
-					fmt.Println("Server URL ERR", thisServer.UrlHealth, time.Since(start))
+					fmt.Println("Server URL ERR", thisServer.UrlHealth, statusCode, time.Since(start))
 				} else {
-					fmt.Println("Server URL OK: ", thisServer.UrlHealth, time.Since(start))
+					fmt.Println("Server URL OK: ", thisServer.UrlHealth, statusCode, time.Since(start))
 				}
 				if thisServer.Status != newStatus {
 					err := service.updateServerStatus(thisServer)

@@ -16,8 +16,28 @@ var service MonitorService
 var mockServerService *server.MockServerService
 var mockNotificationService *notification.MockNotificationService
 
+// commonSetupDone is used to ensure that common setup is performed only once.
+var commonSetupDone bool
+
+// commonSetup performs the common setup required for all tests.
+func commonSetup() {
+	if !commonSetupDone {
+		util.LoadConfig("../test")
+		commonSetupDone = true
+	}
+}
+
+// TestMain is executed before any test in the package.
+func TestMain(m *testing.M) {
+	// Perform common setup before running all tests
+	commonSetup()
+
+	// Run all tests in the package
+	m.Run()
+}
+
 func createMonitorServiceInstance(t *testing.T) *gomock.Controller {
-	util.LoadConfig("../local")
+	util.LoadConfig("../dev")
 	mockCtrl := gomock.NewController(t)
 	mockServerService = server.NewMockServerService(mockCtrl)
 	mockNotificationService = notification.NewMockNotificationService(mockCtrl)
@@ -65,7 +85,7 @@ func TestStartServers(t *testing.T) {
 		Return(nil)
 
 	mockNotificationService.EXPECT().
-		SendNotification("Server status changed", "STATUS CHANGE. Server www.uptodown.com is: DOWN!", "recipient.local@recipient.com").
+		SendNotification("Server status changed", "STATUS CHANGE. Server www.uptodown.com is: DOWN!", "recipient.dev@recipient.com").
 		Times(1).
 		Return(nil)
 

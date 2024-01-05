@@ -1,9 +1,10 @@
 package server
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
-	"testing"
 )
 
 func TestServiceUpsertServer(t *testing.T) {

@@ -1,9 +1,14 @@
 package server
 
+import (
+	"net/http"
+)
+
 type ServerService interface {
 	Upsert(server *Server) (*Server, error)
 	GetAll() ([]*Server, error)
 	Delete(hostname *string) (bool, error)
+	HealthCheck(urlHealth string) (ServerStatus, int)
 }
 
 type ServerServiceImpl struct {
@@ -32,4 +37,18 @@ func (service ServerServiceImpl) GetAll() ([]*Server, error) {
 
 func (service ServerServiceImpl) Delete(url *string) (bool, error) {
 	return service.dao.Delete(url)
+}
+
+func (server ServerServiceImpl) HealthCheck(urlHealth string) (ServerStatus, int) {
+	res, err := http.Get(urlHealth)
+
+	if err != nil {
+		return Down, 0
+	}
+
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		return Down, res.StatusCode
+	}
+
+	return Up, res.StatusCode
 }

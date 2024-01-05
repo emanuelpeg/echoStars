@@ -22,5 +22,6 @@ go.work
 
 .idea/
 
-database/config.local.json
-data.local.db
+*local.db
+*local.properties
+datatest.db

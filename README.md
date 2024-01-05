@@ -92,3 +92,20 @@ mockgen -source=C:\projects\goLang\echoStars\greetings\greetings.go -destination
 ## Routines
 
 Go to the *routines* subdirectory  and use `go run .` to run the routines test code.
+
+## Express test server
+
+*ExpressJs server* for testing the monitor service with 3 endpoints.
+
+* <http://localhost:3000/healthCheck/success>: always succeeds
+* <http://localhost:3000/healthCheck/error>  always fails
+* <http://localhost:3000/healthCheck/sketchy> fails 10% of the time
+
+When running the monitor service these endpoints will be checked periodically even if the test server is down.
+
+To run the test server go to the *express-test-server* subdirectory and run:
+
+```bash
+npm install
+npm start
+```

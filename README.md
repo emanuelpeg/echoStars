@@ -45,9 +45,15 @@ the `AP_PROFILE` environment variable will indicate which `.property` file the a
 
 ## Write test with Mocks
 
-### Greetings
+### Runing all tests
 
-In the folder *greetings* there are examples of unit tests
+```bash
+go test -v ./...
+```
+
+### Test examples "Greetings"
+
+In the folder *greetings* there are a few examples of unit tests
 
 ### GoMock
 
@@ -109,3 +115,13 @@ To run the test server go to the *express-test-server* subdirectory and run:
 npm install
 npm start
 ```
+
+## Docker
+
+To run the app in docker use `docker-compose up`. Add the `--build` option if you want to force a build of the images before staring the containers. Add the `-d` option if you want docker-compose to run in dettached mode
+
+To stop the containers while running in dettached mode run `docker-compose down`. Use `-v` if you want to remove the volumes
+
+To check the logs use `docker-compose logs [service-name]` where *service-name* is optional
+
+Use `docker-compose ps` to list the currently running containers

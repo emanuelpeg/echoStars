@@ -2,8 +2,9 @@ package notification
 
 import (
 	"echoStars/util"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // commonSetupDone is used to ensure that common setup is performed only once.
@@ -12,7 +13,7 @@ var commonSetupDone bool
 // commonSetup performs the common setup required for all tests.
 func commonSetup() {
 	if !commonSetupDone {
-		util.LoadConfig("../test")
+		util.LoadConfig("../env.test")
 		commonSetupDone = true
 	}
 }

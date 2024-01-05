@@ -11,7 +11,7 @@ var commonSetupDone bool
 // commonSetup performs the common setup required for all tests.
 func commonSetup() {
 	if !commonSetupDone {
-		util.LoadConfig("../test")
+		util.LoadConfig("../env.test")
 		commonSetupDone = true
 	}
 }

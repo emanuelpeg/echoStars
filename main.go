@@ -7,12 +7,13 @@ import (
 	"echoStars/server"
 	"echoStars/sysinfo"
 	"echoStars/util"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	echoSwagger "github.com/swaggo/echo-swagger"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 // The init() function is executed before the main() function in a package and may be executed in an unexpected order
@@ -22,7 +23,7 @@ func init() {
 	if activeProfile == "" {
 		log.Fatal("No application profile provided (APP_PROFILE)")
 	}
-	util.LoadConfig(activeProfile)
+	util.LoadConfig("env." + activeProfile)
 }
 
 func main() {

@@ -22,7 +22,7 @@ var commonSetupDone bool
 // commonSetup performs the common setup required for all tests.
 func commonSetup() {
 	if !commonSetupDone {
-		util.LoadConfig("../test")
+		util.LoadConfig("../env.test")
 		commonSetupDone = true
 	}
 }
@@ -37,7 +37,6 @@ func TestMain(m *testing.M) {
 }
 
 func createMonitorServiceInstance(t *testing.T) *gomock.Controller {
-	util.LoadConfig("../dev")
 	mockCtrl := gomock.NewController(t)
 	mockServerService = server.NewMockServerService(mockCtrl)
 	mockNotificationService = notification.NewMockNotificationService(mockCtrl)
@@ -85,7 +84,7 @@ func TestStartServers(t *testing.T) {
 		Return(nil)
 
 	mockNotificationService.EXPECT().
-		SendNotification("Server status changed", "STATUS CHANGE. Server www.uptodown.com is: DOWN!", "recipient.dev@recipient.com").
+		SendNotification("Server status changed", "STATUS CHANGE. Server www.uptodown.com is: DOWN!", "recipient.test@recipient.com").
 		Times(1).
 		Return(nil)
 

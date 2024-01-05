@@ -24,4 +24,4 @@ go.work
 
 *local.db
 *local.properties
-datatest.db
+data.test.db

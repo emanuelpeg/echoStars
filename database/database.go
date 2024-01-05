@@ -2,6 +2,9 @@ package database
 
 import (
 	"echoStars/util"
+	"fmt"
+	"path/filepath"
+
 	bolt "go.etcd.io/bbolt"
 )
 
@@ -15,8 +18,13 @@ type BoltDBImpl struct {
 }
 
 func NewBoltDB() (BoltDB, error) {
+	dbDirectory := util.ApplicationConfig.GetString("database.file.directory")
+	dbFileName := util.ApplicationConfig.GetString("database.file.name")
+	dbFilePath := filepath.Join(dbDirectory, string(filepath.Separator), dbFileName)
+	fmt.Println("Connected to db: ", dbFilePath)
+
 	boltDb := BoltDBImpl{
-		FileName: util.ApplicationConfig.GetString("database.file.name"),
+		FileName: dbFilePath,
 	}
 
 	return boltDb, nil

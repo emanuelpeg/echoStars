@@ -6,9 +6,10 @@ import (
 )
 
 func Seed() error {
-	fmt.Println("Seed Starts...")
+	fmt.Println("Server seed starts...")
 	var servers []Server
-	err := util.ReadJSONFile("server/seed.json", &servers)
+	seedFileName := util.ApplicationConfig.GetString("database.seed.server.file.name")
+	err := util.ReadJSONFile("server/"+seedFileName, &servers)
 	if err != nil {
 		return err
 	}

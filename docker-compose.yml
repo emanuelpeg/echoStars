@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  echo-stars:
+    build:
+      context: .
+    ports:
+      - "1323:1323"
+    networks:
+      - my-network
+    environment:
+      - APP_PROFILE=docker
+    depends_on:
+      - express-test-server
+    volumes:
+      - ./data:/app/data
+
+  express-test-server:
+    build:
+      context: ./express-test-server
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - my-network
+
+networks:
+  my-network:

@@ -125,3 +125,55 @@ To stop the containers while running in dettached mode run `docker-compose down`
 To check the logs use `docker-compose logs [service-name]` where *service-name* is optional
 
 Use `docker-compose ps` to list the currently running containers
+
+## GRpc
+### Install
+
+Install with following commands:
+```bash
+$ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go: downloading google.golang.org/protobuf v1.28.1
+$ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+go: downloading google.golang.org/grpc v1.2.1
+```
+### Develop
+
+To develop a GRpc services should follow these steps:
+
+1. Write a .proto, for example :
+```Go
+syntax = "proto3";
+
+package greetings;
+option go_package = "echoStarts/greetings";
+
+message HelloRequest {
+  string message = 1;
+}
+
+message HelloResponse {
+  string message = 1;
+}
+
+message HelloWoldRequest {
+}
+
+message HelloWoldResponse {
+  string message = 1;
+}
+
+//  Greetings service.
+service GreeterServiceGrpc {
+
+  rpc Hello(HelloRequest) returns (HelloResponse) {}
+  rpc HelloWold(HelloWoldRequest) returns (stream HelloWoldResponse) {}
+
+}
+```
+2. Generate code from the .proto. With this command:
+
+```bash
+protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative ./greetings/greetings.proto
+```
+
+3. Write a server and a client. see [server](greetings/grpc_server/main.go) and [client](greetings/grpc_client/main.go)

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package greetings;
+option go_package = "echoStarts/greetings";
+
+message HelloRequest {
+  string message = 1;
+}
+
+message HelloResponse {
+  string message = 1;
+}
+
+message HelloWoldRequest {
+}
+
+message HelloWoldResponse {
+  string message = 1;
+}
+
+//  Greetings service.
+service GreeterServiceGrpc {
+
+  rpc Hello(HelloRequest) returns (HelloResponse) {}
+  rpc HelloWold(HelloWoldRequest) returns (stream HelloWoldResponse) {}
+
+}

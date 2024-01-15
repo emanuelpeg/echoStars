@@ -13,6 +13,13 @@ definitions:
       message:
         type: string
     type: object
+  notification.sendSMSRequest:
+    properties:
+      message:
+        type: string
+      phoneNumber:
+        type: string
+    type: object
   server.Server:
     properties:
       frequency:
@@ -147,7 +154,30 @@ paths:
             $ref: '#/definitions/notification.sendEmailResponse'
       summary: Send an email notification.
       tags:
-      - email
+      - notification
+  /notification/sms:
+    post:
+      consumes:
+      - application/json
+      description: Using short message service from Twilio, sends a test notification
+        to any number. Phone number in international format, example:"+123456789"
+      parameters:
+      - description: SMS request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/notification.sendSMSRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/notification.sendEmailResponse'
+      summary: Send an SMS notification.
+      tags:
+      - notification
   /servers:
     delete:
       consumes:

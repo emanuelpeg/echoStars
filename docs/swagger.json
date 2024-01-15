@@ -131,7 +131,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "email"
+                    "notification"
                 ],
                 "summary": "Send an email notification.",
                 "parameters": [
@@ -142,6 +142,40 @@
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/notification.sendEmailRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/notification.sendEmailResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/notification/sms": {
+            "post": {
+                "description": "Using short message service from Twilio, sends a test notification to any number. Phone number in international format, example:\"+123456789\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notification"
+                ],
+                "summary": "Send an SMS notification.",
+                "parameters": [
+                    {
+                        "description": "SMS request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/notification.sendSMSRequest"
                         }
                     }
                 ],
@@ -243,6 +277,17 @@
             "type": "object",
             "properties": {
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "notification.sendSMSRequest": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "phoneNumber": {
                     "type": "string"
                 }
             }

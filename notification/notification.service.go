@@ -15,3 +15,11 @@ func NewEmailNotificationService() NotificationService {
 	}
 	return newEmailService(config)
 }
+
+func NewSMSNotificationService() NotificationService {
+	config, err := loadSMSServiceConfig()
+	if err != nil {
+		log.Fatal("Error loading email notification configuration:", err)
+	}
+	return newSMSService(config)
+}
